@@ -1,0 +1,14 @@
+﻿IF OBJECT_ID('_{{tablename}}GetByKey', 'P') IS NOT NULL
+DROP PROC _{{tablename}}GetByKey
+GO
+CREATE PROCEDURE [_{{tablename}}GetByKey]
+(
+{{columndeclarations}} 
+)
+AS
+BEGIN
+SELECT 
+{{selectcolumns}}
+FROM [{{tablename}}] WHERE {{columnexecutions}}
+END
+GO

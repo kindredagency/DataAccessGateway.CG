@@ -1,0 +1,12 @@
+﻿IF OBJECT_ID('_{{tablename}}_UDTT_Insert', 'P') IS NOT NULL
+DROP PROC _{{tablename}}_UDTT_Insert
+GO
+CREATE PROCEDURE [_{{tablename}}_UDTT_Insert]
+(
+@{{tablename}} as _{{tablename}} READONLY
+)
+AS
+BEGIN
+INSERT INTO [{{tablename}}] ({{columns}}) Select {{selectcolumns}} from @{{tablename}}
+END
+GO

@@ -1,0 +1,12 @@
+﻿IF OBJECT_ID('_{{tablename}}_UDTT_Update', 'P') IS NOT NULL
+DROP PROC _{{tablename}}_UDTT_Update
+GO
+CREATE PROCEDURE [_{{tablename}}_UDTT_Update]
+(
+@{{tablename}} as _{{tablename}} READONLY
+)
+AS
+BEGIN
+UPDATE [{{tablename}}] SET {{columns}} FROM  {{tablename}}, @{{tablename}} as TVP WHERE {{columnexecutions}}
+END
+GO

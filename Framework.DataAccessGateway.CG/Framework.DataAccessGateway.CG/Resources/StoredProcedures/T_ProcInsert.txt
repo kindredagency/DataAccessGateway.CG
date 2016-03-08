@@ -1,0 +1,11 @@
+﻿IF OBJECT_ID('_{{tablename}}Insert', 'P') IS NOT NULL
+DROP PROC _{{tablename}}Insert
+GO
+CREATE PROCEDURE [_{{tablename}}Insert]
+(
+{{columndeclarations}} 
+)
+AS
+BEGIN
+INSERT INTO [{{tablename}}] ({{columns}}) VALUES ({{columnexecutions}}) {{return}} END
+GO

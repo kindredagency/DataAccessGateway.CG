@@ -1,0 +1,11 @@
+﻿IF OBJECT_ID('_{{tablename}}GetAll', 'P') IS NOT NULL
+DROP PROC _{{tablename}}GetAll
+GO
+CREATE PROCEDURE [_{{tablename}}GetAll]
+AS
+BEGIN
+SELECT 
+{{selectcolumns}}
+FROM [{{tablename}}]
+END
+GO

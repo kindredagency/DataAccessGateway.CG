@@ -1,0 +1,14 @@
+﻿IF OBJECT_ID('_{{tablename}}GetBy_{{columns}}', 'P') IS NOT NULL
+DROP PROC _{{tablename}}GetBy_{{columns}}
+GO
+CREATE PROCEDURE [_{{tablename}}GetBy_{{columns}}]
+(
+{{columndeclarations}}
+)
+AS
+BEGIN
+SELECT
+{{selectcolumns}}
+FROM [{{tablename}}] WHERE {{columnexecutions}}
+END
+GO

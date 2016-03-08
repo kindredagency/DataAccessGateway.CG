@@ -1,0 +1,12 @@
+﻿IF OBJECT_ID('_{{tablename}}Update', 'P') IS NOT NULL
+DROP PROC _{{tablename}}Update
+GO
+CREATE PROCEDURE [_{{tablename}}Update]
+(
+{{columndeclarations}} 
+)
+AS
+BEGIN
+UPDATE [{{tablename}}] SET {{columns}} WHERE {{columnexecutions}}
+END
+GO

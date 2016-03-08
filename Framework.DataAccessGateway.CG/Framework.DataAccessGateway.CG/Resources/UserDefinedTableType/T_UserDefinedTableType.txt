@@ -1,0 +1,10 @@
+﻿IF TYPE_ID(N'_{{tablename}}') IS NOT NULL
+BEGIN
+    DROP TYPE dbo._{{tablename}}
+END
+GO
+CREATE TYPE dbo._{{tablename}} AS TABLE
+( 
+{{columndeclarations}} 
+)
+GO

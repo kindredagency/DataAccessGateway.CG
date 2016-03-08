@@ -1,0 +1,12 @@
+﻿IF OBJECT_ID('_{{tablename}}DeleteByKey', 'P') IS NOT NULL
+DROP PROC _{{tablename}}DeleteByKey
+GO
+CREATE PROCEDURE [_{{tablename}}DeleteByKey]
+(
+{{columndeclarations}} 
+)
+AS
+BEGIN
+DELETE FROM [{{tablename}}] WHERE {{columnexecutions}}
+END
+GO

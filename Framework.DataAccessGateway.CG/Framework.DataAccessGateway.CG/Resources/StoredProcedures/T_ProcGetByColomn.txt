@@ -1,0 +1,14 @@
+﻿IF OBJECT_ID('_{{tablename}}GetBy{{column}}', 'P') IS NOT NULL
+DROP PROC _{{tablename}}GetBy{{column}}
+GO
+CREATE PROCEDURE [_{{tablename}}GetBy{{column}}]
+(
+@{{column}} {{columnsqldatatype}}
+)
+AS
+BEGIN
+SELECT 
+{{selectcolumns}}
+FROM [{{tablename}}] WHERE [{{column}}] = @{{column}}
+END
+GO
