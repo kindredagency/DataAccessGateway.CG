@@ -19,55 +19,50 @@
 <#@ import namespace="Framework.DataAccessGateway.CG.Models" #>
 
 <#
-	 var manager = Manager.Create(Host, GenerationEnvironment);
+	IServiceProvider serviceProvider = (IServiceProvider)this.Host;
+	DTE dte = serviceProvider.GetService(typeof(DTE)) as DTE; 
 
-	 IServiceProvider serviceProvider = (IServiceProvider)this.Host;
-	 
-	 DTE dte = serviceProvider.GetService(typeof(DTE)) as DTE; 
-	 
-	 foreach (String projectName in (Array)dte.Solution.SolutionBuild.StartupProjects)
-	 {
-		var activeProject = (EnvDTE.Project)dte.Solution.Projects.Item(projectName);
-
-		foreach (EnvDTE.ProjectItem projectItem in activeProject.ProjectItems)
-		{
-			if (Regex.IsMatch(projectItem.Name,"(app|web).config",RegexOptions.IgnoreCase))
-			{
-				var configurationFilename = projectItem.get_FileNames(0);
+	var manager = Manager.Create(Host, GenerationEnvironment);	
 		
-				var configFile = new ExeConfigurationFileMap();
-				configFile.ExeConfigFilename = configurationFilename;
+	var configFile = new ExeConfigurationFileMap();
+	configFile.ExeConfigFilename = Host.ResolvePath("cg.config");;
 				
-				var configuration = System.Configuration.ConfigurationManager.OpenMappedExeConfiguration(configFile, ConfigurationUserLevel.None);			
+	var configuration = System.Configuration.ConfigurationManager.OpenMappedExeConfiguration(configFile, ConfigurationUserLevel.None);			
 
-				foreach(ConnectionStringSettings  connectionString in configuration.ConnectionStrings.ConnectionStrings)
-				{
-					SqlConnectionStringBuilder builder =  new SqlConnectionStringBuilder(connectionString.ConnectionString);
+	var appSettings = configuration.GetSection("cg.appSettings") as AppSettingsSection;
 
-					if((builder.DataSource != "") && (builder.InitialCatalog != ""))
-					{
-						var code = new CodeFactory(connectionString.ConnectionString, Framework.DataAccessGateway.Core.DBHandlerType.DbHandlerMSSQL);
+	List<string> omittedTables = new List<string>();
 
-						Settings.ModelNamespace = dte.Solution.FindProjectItem(Host.TemplateFile).ContainingProject.Name + "." + builder.InitialCatalog;
-						Settings.ModelCustomDataAnnotations = false;
+	foreach(var omittedTable in appSettings.Settings["OmittedTables"].Value.Split(','))
+	{
+		omittedTables.Add(omittedTable);
+	}
 
-						var models = code.Models();
+	Settings.OmittedTables = omittedTables.ToArray();
+
+	foreach(ConnectionStringSettings  connectionString in configuration.ConnectionStrings.ConnectionStrings)
+	{
+		SqlConnectionStringBuilder builder =  new SqlConnectionStringBuilder(connectionString.ConnectionString);
+
+		if((builder.DataSource != "") && (builder.InitialCatalog != ""))
+		{
+			var code = new CodeFactory(connectionString.ConnectionString, Framework.DataAccessGateway.Core.DBHandlerType.DbHandlerMSSQL);
+
+			Settings.ModelNamespace = dte.Solution.FindProjectItem(Host.TemplateFile).ContainingProject.Name + "." + builder.InitialCatalog;
+			Settings.ModelCustomDataAnnotations = false;
+
+			var models = code.Models();
 						
-						foreach(var model in models)
-						{
-							manager.StartNewFile(model.Name + ".cs");
+			foreach(var model in models)
+			{
+				manager.StartNewFile(model.Name + ".cs");
 
-							WriteLine(model.CSharpCode);	
+				WriteLine(model.CSharpCode);	
 
-							manager.EndBlock();						
-						}	
-					}					
-				}
+				manager.EndBlock();						
+			}	
+		}					
+	}
 
-				break;				
-			}
-		}		
-     }
-
-	 manager.Process(true);
+	manager.Process(true);	
 #>

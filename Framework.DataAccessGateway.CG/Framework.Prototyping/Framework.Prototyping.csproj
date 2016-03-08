@@ -33,22 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Framework.AssetLibrary.Caching, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Framework.AssetLibrary.Caching.1.0.0\lib\Framework.AssetLibrary.Caching.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Framework.AssetLibrary.Types, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Framework.AssetLibrary.Types.1.0.0\lib\Framework.AssetLibrary.Types.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Framework.DataAccessGateway.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Framework.DataAccessGateway.Core.1.0.0\lib\Framework.DataAccessGateway.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Framework.DataAccessGateway.Schema, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Framework.DataAccessGateway.Schema.1.0.0\lib\Framework.DataAccessGateway.Schema.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -70,16 +54,9 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Framework.DataAccessGateway.Automation\Framework.DataAccessGateway.Automation.csproj">
-      <Project>{f1257a07-3be0-4860-ab18-25310855df32}</Project>
-      <Name>Framework.DataAccessGateway.Automation</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

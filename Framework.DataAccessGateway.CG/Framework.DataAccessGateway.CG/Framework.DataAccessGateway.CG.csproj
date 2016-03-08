@@ -83,9 +83,6 @@
     <EmbeddedResource Include="Resources\StoredProcedures\Parameters\T_UDTT_ParameterColumnValue.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Resources\StoredProcedures\T_ProcGetAll.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -110,6 +107,9 @@
     <Content Include="Resources\sql-code-placeholders.txt" />
     <EmbeddedResource Include="Resources\StoredProcedures\Parameters\T_ParameterDeclarationOptional.txt" />
     <EmbeddedResource Include="Resources\StoredProcedures\Parameters\T_ParameterPrimaryKeyDeclarationForOriginalValue.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

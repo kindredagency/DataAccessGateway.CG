@@ -44,6 +44,8 @@ namespace Framework.DataAccessGateway.CG
             var schemaHandler = new DBSchemaHandler(ConnectionString, DBHandlerType);
             var databaseDefinition = schemaHandler.GetDataBaseDefinition();
 
+            var allowedTables = databaseDefinition.Tables.Where(c => !Settings.OmittedTables.Contains(c.Name));
+
             CodeCompileUnit codeCompileUnit = new CodeCompileUnit();
             CodeNamespace codeNamespace = new CodeNamespace(Settings.DatabaseNamespace);
 
@@ -58,7 +60,7 @@ namespace Framework.DataAccessGateway.CG
             codeInterfaceDeclaration.IsInterface = true;
             codeInterfaceDeclaration.IsPartial = true;
 
-            foreach (var tableDefinition in databaseDefinition.Tables)
+            foreach (var tableDefinition in allowedTables)
             {
                 CodeMemberProperty codeMemberProperty = new CodeMemberProperty();
 
@@ -85,7 +87,7 @@ namespace Framework.DataAccessGateway.CG
 
             codeTypeDeclaration.Members.Add(dbHandler);
 
-            foreach (var tableDefinition in databaseDefinition.Tables)
+            foreach (var tableDefinition in allowedTables)
             {
                 CodeMemberField codeMemberProperty = new CodeMemberField();
 
@@ -102,7 +104,7 @@ namespace Framework.DataAccessGateway.CG
             constructorWithIDBHandler.Parameters.Add(new CodeParameterDeclarationExpression(typeof(IDBHandler), "dbHandler"));
             constructorWithIDBHandler.Statements.Add(new CodeAssignStatement(new CodeVariableReferenceExpression("_DBHandler"), new CodeVariableReferenceExpression("dbHandler")));
 
-            foreach (var tableDefinition in databaseDefinition.Tables)
+            foreach (var tableDefinition in allowedTables)
             {
                 string statement = "{0} = new {1}({2})";
 
@@ -124,7 +126,7 @@ namespace Framework.DataAccessGateway.CG
 
             constructorWithConnectionString.Statements.Add(new CodeExpressionStatement(new CodeSnippetExpression(declareDBHandlerStatement)));
 
-            foreach (var tableDefinition in databaseDefinition.Tables)
+            foreach (var tableDefinition in allowedTables)
             {
                 string statement = "{0} = new {1}({2})";
 

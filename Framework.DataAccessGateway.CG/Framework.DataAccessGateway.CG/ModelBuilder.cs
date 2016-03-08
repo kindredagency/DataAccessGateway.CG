@@ -42,11 +42,13 @@ namespace Framework.DataAccessGateway.CG
         public List<Model> CSharpCode()
         {
             DBSchemaHandler dbSchemaHandler = new DBSchemaHandler(ConnectionString, DBHandlerType);
-            DBSchemaDataBaseDefinition dbSchemaDataBaseDefinition = dbSchemaHandler.GetDataBaseDefinition();
+            DBSchemaDataBaseDefinition databaseDefinition = dbSchemaHandler.GetDataBaseDefinition();
+
+            var allowedTables = databaseDefinition.Tables.Where(c => !Settings.OmittedTables.Contains(c.Name));
 
             List<Model> modelCode = new List<Model>();           
 
-            foreach (var tableDefinition in dbSchemaDataBaseDefinition.Tables)
+            foreach (var tableDefinition in allowedTables)
             {
 
                 #region Model

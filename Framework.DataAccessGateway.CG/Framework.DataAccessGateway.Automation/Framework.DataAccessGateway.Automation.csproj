@@ -59,9 +59,6 @@
     <Compile Include="SubTable.cs">
       <DependentUpon>_Models.tt</DependentUpon>
     </Compile>
-    <Compile Include="sysdiagrams.cs">
-      <DependentUpon>_Models.tt</DependentUpon>
-    </Compile>
     <Compile Include="_DAGUnitTest.cs">
       <DependentUpon>_Context.tt</DependentUpon>
     </Compile>
@@ -71,14 +68,12 @@
     <Compile Include="_SubTable_Repository.cs">
       <DependentUpon>_Repositories.tt</DependentUpon>
     </Compile>
-    <Compile Include="_sysdiagrams_Repository.cs">
-      <DependentUpon>_Repositories.tt</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="cg.config" />
     <None Include="packages.config" />
     <None Include="TTFileManager.ttinclude" />
   </ItemGroup>

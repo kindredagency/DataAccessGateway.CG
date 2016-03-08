@@ -57,5 +57,11 @@ namespace Framework.DataAccessGateway.CG
         public static string[] DatabaseImport = new string[] { "System", "System.Data", "System.Linq", "System.Collections.Generic", "Framework.DataAccessGateway.Core" };
 
         #endregion
+
+        #region Global settings
+
+        public static string[] OmittedTables = new string[] { "sysdiagrams" };     
+
+        #endregion
     }
 }

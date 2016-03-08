@@ -35,9 +35,11 @@ namespace Framework.DataAccessGateway.CG
                 var schemaHandler = new DBSchemaHandler(ConnectionString, DBHandlerType);
                 var databaseDefinition = schemaHandler.GetDataBaseDefinition();
 
+                var allowedTables = databaseDefinition.Tables.Where(c => !Settings.OmittedTables.Contains(c.Name));
+
                 List<StoredProcedure> storedProcedures = new List<StoredProcedure>();
 
-                foreach (var tableDefinition in databaseDefinition.Tables)
+                foreach (var tableDefinition in allowedTables)
                 {
                     #region Primary key fields
 
@@ -419,12 +421,14 @@ namespace Framework.DataAccessGateway.CG
             var schemaHandler = new DBSchemaHandler(ConnectionString, DBHandlerType);
             var databaseDefinition = schemaHandler.GetDataBaseDefinition();
 
+            var allowedTables = databaseDefinition.Tables.Where(c => !Settings.OmittedTables.Contains(c.Name));
+
             string T_UserDefinedTableType = Settings.T_UserDefinedTableType;
             string T_UserDefinedTableTypeFieldsDeclaration = Settings.T_UserDefinedTableTypeParameterDeclaration;
 
             List<UserDefinedTableType> userDefinedTableTypes = new List<UserDefinedTableType>();
 
-            foreach (var tableDefinition in databaseDefinition.Tables)
+            foreach (var tableDefinition in allowedTables)
             {
                 StringBuilder temp_T_UserDefinedTableTypeFieldsDeclaration = new StringBuilder();
 

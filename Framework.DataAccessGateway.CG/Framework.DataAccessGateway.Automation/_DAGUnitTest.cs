@@ -29,11 +29,6 @@ namespace Framework.DataAccessGateway.Automation.DAGUnitTest
 		{
 			get;
 		}
-		
-		Isysdiagrams_Repository sysdiagrams
-		{
-			get;
-		}
 	}
 	
 	public partial class DAGUnitTest : IDAGUnitTest
@@ -45,14 +40,11 @@ namespace Framework.DataAccessGateway.Automation.DAGUnitTest
 		
 		public ISubTable_Repository SubTable { get; private set; }
 		
-		public Isysdiagrams_Repository sysdiagrams { get; private set; }
-		
 		public DAGUnitTest(Framework.DataAccessGateway.Core.IDBHandler dbHandler)
 		{
 			_DBHandler = dbHandler;
 			Data = new Data_Repository(_DBHandler);
 			SubTable = new SubTable_Repository(_DBHandler);
-			sysdiagrams = new sysdiagrams_Repository(_DBHandler);
 			Initialize();
 		}
 		
@@ -61,7 +53,6 @@ namespace Framework.DataAccessGateway.Automation.DAGUnitTest
 			_DBHandler = new DBHandler(connectionString, DBHandlerType.DbHandlerMSSQL);
 			Data = new Data_Repository(_DBHandler);
 			SubTable = new SubTable_Repository(_DBHandler);
-			sysdiagrams = new sysdiagrams_Repository(_DBHandler);
 			Initialize();
 		}
 		
