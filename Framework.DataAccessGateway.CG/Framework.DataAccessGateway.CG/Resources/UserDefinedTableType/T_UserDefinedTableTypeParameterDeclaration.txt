@@ -1,1 +1,1 @@
-﻿{{columnname}} {{columndatatype}},
+﻿[{{columnname}}] {{columndatatype}}{{columnsize}},

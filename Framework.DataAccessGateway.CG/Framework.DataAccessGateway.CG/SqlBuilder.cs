@@ -439,7 +439,7 @@ namespace Framework.DataAccessGateway.CG
 
                 foreach (var column in tableDefinition.ColumnDefinitionList)
                 {
-                    temp_T_UserDefinedTableTypeFieldsDeclaration.Append(T_UserDefinedTableTypeFieldsDeclaration.Replace("{{columnname}}", column.ColumnName).Replace("{{columndatatype}}", column.DataType.ToSqlDataType().ToString()));                    
+                    temp_T_UserDefinedTableTypeFieldsDeclaration.Append(T_UserDefinedTableTypeFieldsDeclaration.Replace("{{columnname}}", column.ColumnName).Replace("{{columndatatype}}", column.DataType.ToSqlDataType().ToString()).Replace("{{columnsize}}", column.ToSqlDataTypeSize()));                    
                 }
 
                 var temp_T_UserDefinedTableType = (T_UserDefinedTableType.Replace("{{tablename}}", tableDefinition.Name).Replace("{{columndeclarations}} ", temp_T_UserDefinedTableTypeFieldsDeclaration.ToString().TrimEndFrom(",")));
