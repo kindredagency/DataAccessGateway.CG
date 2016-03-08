@@ -17,46 +17,29 @@ namespace Framework.DataAccessGateway.Automation.DAGUnitTest
 	using Framework.DataAccessGateway.Core;
 	
 	
-	public partial interface IDAGUnitTest
+	public partial class DAGUnitTest
 	{
 		
-		IData_Repository Data
-		{
-			get;
-		}
+		public Data_Repository Data { get; private set; }
 		
-		ISubTable_Repository SubTable
-		{
-			get;
-		}
-	}
-	
-	public partial class DAGUnitTest : IDAGUnitTest
-	{
+		public SubTable_Repository SubTable { get; private set; }
 		
-		private Framework.DataAccessGateway.Core.IDBHandler _DBHandler { get; }
-		
-		public IData_Repository Data { get; private set; }
-		
-		public ISubTable_Repository SubTable { get; private set; }
+		public sysdiagrams_Repository sysdiagrams { get; private set; }
 		
 		public DAGUnitTest(Framework.DataAccessGateway.Core.IDBHandler dbHandler)
 		{
-			_DBHandler = dbHandler;
-			Data = new Data_Repository(_DBHandler);
-			SubTable = new SubTable_Repository(_DBHandler);
-			Initialize();
+			Data = new Data_Repository(dbHandler);;
+			SubTable = new SubTable_Repository(dbHandler);;
+			sysdiagrams = new sysdiagrams_Repository(dbHandler);;
 		}
 		
 		public DAGUnitTest(string connectionString)
 		{
-			_DBHandler = new DBHandler(connectionString, DBHandlerType.DbHandlerMSSQL);
-			Data = new Data_Repository(_DBHandler);
-			SubTable = new SubTable_Repository(_DBHandler);
-			Initialize();
+			IDBHandler dbHandler = new DBHandler(connectionString, DBHandlerType.DbHandlerMSSQL);
+			Data = new Data_Repository(dbHandler);;
+			SubTable = new SubTable_Repository(dbHandler);;
+			sysdiagrams = new sysdiagrams_Repository(dbHandler);;
 		}
-		
-		partial void Initialize();
 	}
 }
 

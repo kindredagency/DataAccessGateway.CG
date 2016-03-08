@@ -78,6 +78,34 @@ IF OBJECT_ID('_SubTable_UDTT_Update', 'P') IS NOT NULL
 DROP PROC _SubTable_UDTT_Update
 
 GO
+IF OBJECT_ID('_sysdiagramsInsert', 'P') IS NOT NULL
+DROP PROC _sysdiagramsInsert
+
+GO
+IF OBJECT_ID('_sysdiagramsUpdate', 'P') IS NOT NULL
+DROP PROC _sysdiagramsUpdate
+
+GO
+IF OBJECT_ID('_sysdiagramsDeleteByKey', 'P') IS NOT NULL
+DROP PROC _sysdiagramsDeleteByKey
+
+GO
+IF OBJECT_ID('_sysdiagramsGetByKey', 'P') IS NOT NULL
+DROP PROC _sysdiagramsGetByKey
+
+GO
+IF OBJECT_ID('_sysdiagramsGetAll', 'P') IS NOT NULL
+DROP PROC _sysdiagramsGetAll
+
+GO
+IF OBJECT_ID('_sysdiagrams_UDTT_Insert', 'P') IS NOT NULL
+DROP PROC _sysdiagrams_UDTT_Insert
+
+GO
+IF OBJECT_ID('_sysdiagrams_UDTT_Update', 'P') IS NOT NULL
+DROP PROC _sysdiagrams_UDTT_Update
+
+GO
 
 IF TYPE_ID(N'_Data') IS NOT NULL
 BEGIN
@@ -88,6 +116,12 @@ GO
 IF TYPE_ID(N'_SubTable') IS NOT NULL
 BEGIN
     DROP TYPE dbo._SubTable
+END
+
+GO
+IF TYPE_ID(N'_sysdiagrams') IS NOT NULL
+BEGIN
+    DROP TYPE dbo._sysdiagrams
 END
 
 GO
@@ -132,32 +166,43 @@ Data_Id UniqueIdentifier
 
 GO
 
+CREATE TYPE dbo._sysdiagrams AS TABLE
+( 
+name NVarChar,
+principal_id Int,
+diagram_id Int,
+version Int,
+definition VarBinary
+)
+
+GO
+
 
 CREATE PROCEDURE [_DataInsert]
 (
 @Id UniqueIdentifier,
 @BigInt BigInt,
-@Binary Binary(50) = null,
+@Binary Binary = null,
 @Bit Bit = null,
-@Char Char(10) = null,
+@Char Char = null,
 @Date Date = null,
 @DateTime DateTime = null,
-@DateTime2 DateTime2(7) = null,
+@DateTime2 DateTime2 = null,
 @SmallDateTime SmallDateTime = null,
-@DateTimeOffset DateTimeOffset(7) = null,
-@Decimal Decimal(18,2) = null,
+@DateTimeOffset DateTimeOffset = null,
+@Decimal Decimal = null,
 @Float Float = null,
 @Image Image = null,
 @Int Int = null,
 @Money Money = null,
-@NChar NChar(10) = null,
+@NChar NChar = null,
 @NText NText = null,
-@NVarChar NVarChar(MAX) = null,
+@NVarChar NVarChar = null,
 @Real Real = null,
 @SmallMoney SmallMoney = null,
 @Text Text = null,
-@VarBinary VarBinary(50) = null,
-@VarChar VarChar(50) = null 
+@VarBinary VarBinary = null,
+@VarChar VarChar = null 
 )
 AS
 BEGIN
@@ -169,27 +214,27 @@ CREATE PROCEDURE [_DataUpdate]
 (
 @Id UniqueIdentifier,
 @BigInt BigInt,
-@Binary Binary(50) = null,
+@Binary Binary = null,
 @Bit Bit = null,
-@Char Char(10) = null,
+@Char Char = null,
 @Date Date = null,
 @DateTime DateTime = null,
-@DateTime2 DateTime2(7) = null,
+@DateTime2 DateTime2 = null,
 @SmallDateTime SmallDateTime = null,
-@DateTimeOffset DateTimeOffset(7) = null,
-@Decimal Decimal(18,2) = null,
+@DateTimeOffset DateTimeOffset = null,
+@Decimal Decimal = null,
 @Float Float = null,
 @Image Image = null,
 @Int Int = null,
 @Money Money = null,
-@NChar NChar(10) = null,
+@NChar NChar = null,
 @NText NText = null,
-@NVarChar NVarChar(MAX) = null,
+@NVarChar NVarChar = null,
 @Real Real = null,
 @SmallMoney SmallMoney = null,
 @Text Text = null,
-@VarBinary VarBinary(50) = null,
-@VarChar VarChar(50) = null,@_Id UniqueIdentifier,
+@VarBinary VarBinary = null,
+@VarChar VarChar = null,@_Id UniqueIdentifier,
 @_BigInt BigInt 
 )
 AS
@@ -465,6 +510,102 @@ AS
 BEGIN
 UPDATE [SubTable] SET SubTable.[BigInt] = TVP.BigInt,
 SubTable.[Data_Id] = TVP.Data_Id FROM  SubTable, @SubTable as TVP WHERE SubTable.[Id] = TVP.Id
+END
+
+GO
+
+CREATE PROCEDURE [_sysdiagramsInsert]
+(
+@name NVarChar,
+@principal_id Int,
+@version Int = null,
+@definition VarBinary = null 
+)
+AS
+BEGIN
+INSERT INTO [sysdiagrams] ([name],[principal_id],[version],[definition]) VALUES (@name,@principal_id,@version,@definition) IF SCOPE_IDENTITY() IS NOT NULL
+BEGIN
+	SELECT SCOPE_IDENTITY()
+END
+ELSE
+BEGIN
+	SELECT -1
+END END
+
+GO
+
+CREATE PROCEDURE [_sysdiagramsUpdate]
+(
+@name NVarChar,
+@principal_id Int,
+@version Int = null,
+@definition VarBinary = null,@_diagram_id Int 
+)
+AS
+BEGIN
+UPDATE [sysdiagrams] SET [name] = @name,
+[principal_id] = @principal_id,
+[version] = @version,
+[definition] = @definition WHERE [diagram_id] = @_diagram_id
+END
+
+GO
+
+CREATE PROCEDURE [_sysdiagramsDeleteByKey]
+(
+@diagram_id Int 
+)
+AS
+BEGIN
+DELETE FROM [sysdiagrams] WHERE [diagram_id] = @diagram_id
+END
+
+GO
+
+CREATE PROCEDURE [_sysdiagramsGetByKey]
+(
+@diagram_id Int 
+)
+AS
+BEGIN
+SELECT 
+[name],[principal_id],[diagram_id],[version],[definition]
+FROM [sysdiagrams] WHERE [diagram_id] = @diagram_id
+END
+
+GO
+
+CREATE PROCEDURE [_sysdiagramsGetAll]
+AS
+BEGIN
+SELECT 
+[name],[principal_id],[diagram_id],[version],[definition]
+FROM [sysdiagrams]
+END
+
+GO
+
+CREATE PROCEDURE [_sysdiagrams_UDTT_Insert]
+(
+@sysdiagrams as _sysdiagrams READONLY
+)
+AS
+BEGIN
+INSERT INTO [sysdiagrams] ([name],[principal_id],[diagram_id],[version],[definition]) Select [name],[principal_id],[diagram_id],[version],[definition] from @sysdiagrams
+END
+
+GO
+
+CREATE PROCEDURE [_sysdiagrams_UDTT_Update]
+(
+@sysdiagrams as _sysdiagrams READONLY
+)
+AS
+BEGIN
+UPDATE [sysdiagrams] SET sysdiagrams.[name] = TVP.name,
+sysdiagrams.[principal_id] = TVP.principal_id,
+sysdiagrams.[version] = TVP.version,
+sysdiagrams.[definition] = TVP.definition FROM  sysdiagrams, @sysdiagrams as TVP WHERE sysdiagrams.[diagram_id] = TVP.diagram_id
 END
 
 GO

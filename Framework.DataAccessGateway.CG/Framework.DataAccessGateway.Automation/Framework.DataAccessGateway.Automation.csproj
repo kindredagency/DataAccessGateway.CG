@@ -52,22 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data.cs">
-      <DependentUpon>_Models.tt</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SubTable.cs">
-      <DependentUpon>_Models.tt</DependentUpon>
-    </Compile>
-    <Compile Include="_DAGUnitTest.cs">
-      <DependentUpon>_Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="_Data_Repository.cs">
-      <DependentUpon>_Repositories.tt</DependentUpon>
-    </Compile>
-    <Compile Include="_SubTable_Repository.cs">
-      <DependentUpon>_Repositories.tt</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -84,9 +69,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="DAGUnitTest.sql">
-      <DependentUpon>_Sql.tt</DependentUpon>
-    </Content>
     <Content Include="_Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
     </Content>
