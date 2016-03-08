@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework.DataAccessGateway
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework.DataAccessGateway.Automation", "Framework.DataAccessGateway.Automation\Framework.DataAccessGateway.Automation.csproj", "{F1257A07-3BE0-4860-AB18-25310855DF32}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework.Prototyping", "Framework.Prototyping\Framework.Prototyping.csproj", "{8857F6CF-04C5-4709-B51E-DE9C5B74EE1B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Debug", "Debug\Debug.csproj", "{58481814-BCDE-4675-8F11-3F806D82EDBE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{F1257A07-3BE0-4860-AB18-25310855DF32}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1257A07-3BE0-4860-AB18-25310855DF32}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1257A07-3BE0-4860-AB18-25310855DF32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8857F6CF-04C5-4709-B51E-DE9C5B74EE1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8857F6CF-04C5-4709-B51E-DE9C5B74EE1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8857F6CF-04C5-4709-B51E-DE9C5B74EE1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8857F6CF-04C5-4709-B51E-DE9C5B74EE1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58481814-BCDE-4675-8F11-3F806D82EDBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58481814-BCDE-4675-8F11-3F806D82EDBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58481814-BCDE-4675-8F11-3F806D82EDBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58481814-BCDE-4675-8F11-3F806D82EDBE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
