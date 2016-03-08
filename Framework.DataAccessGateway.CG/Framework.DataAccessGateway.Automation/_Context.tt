@@ -1,0 +1,69 @@
+﻿<#@ template hostspecific="true" language="C#" #>
+<#@ output extension="\\" #>
+<#@include file="TTFileManager.ttinclude"#>
+<#@ assembly name="System.Configuration" #>
+<#@ assembly name="EnvDTE" #>
+<#@ assembly name="System.Core.dll" #>
+<#@ assembly name="System.data.dll" #>
+<#@ assembly name="$(ProjectDir)\bin\$(Configuration)\Framework.DataAccessGateway.Core.dll" #>
+<#@ assembly name="$(ProjectDir)\bin\$(Configuration)\Framework.DataAccessGateway.Schema.dll" #>
+<#@ assembly name="$(ProjectDir)\bin\$(Configuration)\Framework.DataAccessGateway.CG.dll" #>
+<#@ import namespace="EnvDTE" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Configuration" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="System.Data.SqlClient" #>
+<#@ import namespace="Framework.DataAccessGateway.Core" #>
+<#@ import namespace="Framework.DataAccessGateway.Schema" #>
+<#@ import namespace="Framework.DataAccessGateway.CG" #>
+<#@ import namespace="Framework.DataAccessGateway.CG.Models" #>
+
+<#
+	 var manager = Manager.Create(Host, GenerationEnvironment);
+
+	 IServiceProvider serviceProvider = (IServiceProvider)this.Host;
+	 
+	 DTE dte = serviceProvider.GetService(typeof(DTE)) as DTE; 
+	 
+	 foreach (String projectName in (Array)dte.Solution.SolutionBuild.StartupProjects)
+	 {
+		var activeProject = (EnvDTE.Project)dte.Solution.Projects.Item(projectName);
+
+		foreach (EnvDTE.ProjectItem projectItem in activeProject.ProjectItems)
+		{
+			if (Regex.IsMatch(projectItem.Name,"(app|web).config",RegexOptions.IgnoreCase))
+			{
+				var configurationFilename = projectItem.get_FileNames(0);
+		
+				var configFile = new ExeConfigurationFileMap();
+				configFile.ExeConfigFilename = configurationFilename;
+				
+				var configuration = System.Configuration.ConfigurationManager.OpenMappedExeConfiguration(configFile, ConfigurationUserLevel.None);			
+
+				foreach(ConnectionStringSettings  connectionString in configuration.ConnectionStrings.ConnectionStrings)
+				{
+					SqlConnectionStringBuilder builder =  new SqlConnectionStringBuilder(connectionString.ConnectionString);
+
+					if((builder.DataSource != "") && (builder.InitialCatalog != ""))
+					{
+						var code = new CodeFactory(connectionString.ConnectionString, Framework.DataAccessGateway.Core.DBHandlerType.DbHandlerMSSQL);
+
+						Settings.DatabaseNamespace = dte.Solution.FindProjectItem(Host.TemplateFile).ContainingProject.Name + "." + builder.InitialCatalog;
+
+						var context = code.Context();
+						
+						manager.StartNewFile( "_" + context.Name + ".cs");
+
+						WriteLine(context.CSharpCode);	
+
+						manager.EndBlock();			
+					}					
+				}
+
+				break;				
+			}
+		}		
+     }
+
+	 manager.Process(true);
+#>
