@@ -40,25 +40,24 @@
 
 	Settings.OmittedTables = omittedTables.ToArray();
 
-	foreach(ConnectionStringSettings  connectionString in configuration.ConnectionStrings.ConnectionStrings)
+	var connectionString = appSettings.Settings["DBConnection"].Value;
+
+	SqlConnectionStringBuilder builder =  new SqlConnectionStringBuilder(connectionString);
+
+	if((builder.DataSource != "") && (builder.InitialCatalog != ""))
 	{
-		SqlConnectionStringBuilder builder =  new SqlConnectionStringBuilder(connectionString.ConnectionString);
+		var code = new CodeFactory(connectionString, Framework.DataAccessGateway.Core.DBHandlerType.DbHandlerMSSQL);
 
-		if((builder.DataSource != "") && (builder.InitialCatalog != ""))
-		{
-			var code = new CodeFactory(connectionString.ConnectionString, Framework.DataAccessGateway.Core.DBHandlerType.DbHandlerMSSQL);
+		Settings.ModelNamespace = dte.Solution.FindProjectItem(Host.TemplateFile).ContainingProject.Name + "." + builder.InitialCatalog;
 
-			Settings.ModelNamespace = dte.Solution.FindProjectItem(Host.TemplateFile).ContainingProject.Name + "." + builder.InitialCatalog;
-
-			var sql = code.Sql(true);
+		var sql = code.Sql(true);
 						
-			manager.StartNewFile(builder.InitialCatalog + ".sql");
+		manager.StartNewFile(builder.InitialCatalog + ".sql");
 
-			WriteLine(sql);	
+		WriteLine(sql);	
 
-			manager.EndBlock();			
-		}					
-	}
+		manager.EndBlock();			
+	}			
 
 	manager.Process(true); 
 	 

@@ -40,29 +40,28 @@
 
 	Settings.OmittedTables = omittedTables.ToArray();
 
-	foreach(ConnectionStringSettings  connectionString in configuration.ConnectionStrings.ConnectionStrings)
+	var connectionString = appSettings.Settings["DBConnection"].Value;
+
+	SqlConnectionStringBuilder builder =  new SqlConnectionStringBuilder(connectionString);
+
+	if((builder.DataSource != "") && (builder.InitialCatalog != ""))
 	{
-		SqlConnectionStringBuilder builder =  new SqlConnectionStringBuilder(connectionString.ConnectionString);
+		var code = new CodeFactory(connectionString, Framework.DataAccessGateway.Core.DBHandlerType.DbHandlerMSSQL);
 
-		if((builder.DataSource != "") && (builder.InitialCatalog != ""))
-		{
-			var code = new CodeFactory(connectionString.ConnectionString, Framework.DataAccessGateway.Core.DBHandlerType.DbHandlerMSSQL);
+		Settings.ModelNamespace = dte.Solution.FindProjectItem(Host.TemplateFile).ContainingProject.Name + "." + builder.InitialCatalog;
+		Settings.ModelCustomDataAnnotations = false;
 
-			Settings.ModelNamespace = dte.Solution.FindProjectItem(Host.TemplateFile).ContainingProject.Name + "." + builder.InitialCatalog;
-			Settings.ModelCustomDataAnnotations = false;
-
-			var models = code.Models();
+		var models = code.Models();
 						
-			foreach(var model in models)
-			{
-				manager.StartNewFile(model.Name + ".cs");
+		foreach(var model in models)
+		{
+			manager.StartNewFile(model.Name + ".cs");
 
-				WriteLine(model.CSharpCode);	
+			WriteLine(model.CSharpCode);	
 
-				manager.EndBlock();						
-			}	
-		}					
-	}
+			manager.EndBlock();						
+		}	
+	}					
 
 	manager.Process(true);	
 #>

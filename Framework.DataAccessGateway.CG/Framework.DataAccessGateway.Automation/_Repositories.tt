@@ -40,28 +40,27 @@
 
 	Settings.OmittedTables = omittedTables.ToArray();
 
-	foreach(ConnectionStringSettings  connectionString in configuration.ConnectionStrings.ConnectionStrings)
+	var connectionString = appSettings.Settings["DBConnection"].Value;
+
+	SqlConnectionStringBuilder builder =  new SqlConnectionStringBuilder(connectionString);
+
+	if((builder.DataSource != "") && (builder.InitialCatalog != ""))
 	{
-		SqlConnectionStringBuilder builder =  new SqlConnectionStringBuilder(connectionString.ConnectionString);
+		var code = new CodeFactory(connectionString, Framework.DataAccessGateway.Core.DBHandlerType.DbHandlerMSSQL);
 
-		if((builder.DataSource != "") && (builder.InitialCatalog != ""))
-		{
-			var code = new CodeFactory(connectionString.ConnectionString, Framework.DataAccessGateway.Core.DBHandlerType.DbHandlerMSSQL);
+		Settings.RepositoryNamespace = dte.Solution.FindProjectItem(Host.TemplateFile).ContainingProject.Name + "." + builder.InitialCatalog;
 
-			Settings.RepositoryNamespace = dte.Solution.FindProjectItem(Host.TemplateFile).ContainingProject.Name + "." + builder.InitialCatalog;
-
-			var repositories = code.Repositories();
+		var repositories = code.Repositories();
 						
-			foreach(var repository in repositories)
-			{
-				manager.StartNewFile("_" + repository.Name + ".cs");
+		foreach(var repository in repositories)
+		{
+			manager.StartNewFile("_" + repository.Name + ".cs");
 
-				WriteLine(repository.CSharpCode);	
+			WriteLine(repository.CSharpCode);	
 
-				manager.EndBlock();						
-			}	
-		}					
-	}
+			manager.EndBlock();						
+		}	
+	}					
 
 	manager.Process(true);	 
 #>
