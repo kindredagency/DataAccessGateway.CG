@@ -1,1 +1,1 @@
-﻿@{{columnname}} {{columndatatype}} = null,
+﻿@{{columnname}} {{columndatatype}}{{columnsize}} = null,

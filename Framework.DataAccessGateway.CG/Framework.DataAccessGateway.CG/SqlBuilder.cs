@@ -55,6 +55,7 @@ namespace Framework.DataAccessGateway.CG
                         string temp_T_ParameterDeclaration = column.IsNullable ? Settings.T_ParameterDeclarationOptional : Settings.T_ParameterDeclaration;
                         temp_T_ParameterDeclaration = temp_T_ParameterDeclaration.Replace("{{columnname}}", column.ColumnName);
                         temp_T_ParameterDeclaration = temp_T_ParameterDeclaration.Replace("{{columndatatype}}", column.DataType.ToSqlDataType().ToString());
+                        temp_T_ParameterDeclaration = temp_T_ParameterDeclaration.Replace("{{columnsize}}", column.ToSqlDataTypeSize());
 
                         string temp_T_ParameterPrimaryKeyDeclarationForOriginalValue = Settings.T_ParameterPrimaryKeyDeclarationForOriginalValue;
                         temp_T_ParameterPrimaryKeyDeclarationForOriginalValue = temp_T_ParameterPrimaryKeyDeclarationForOriginalValue.Replace("{{columnname}}", column.ColumnName);
@@ -123,12 +124,14 @@ namespace Framework.DataAccessGateway.CG
                         temp_Insert_T_ParameterColumn = temp_Insert_T_ParameterColumn.Replace("{{columnname}}", column.ColumnName);
                         temp_Insert_T_ParameterDeclaration = temp_Insert_T_ParameterDeclaration.Replace("{{columnname}}", column.ColumnName);
                         temp_Insert_T_ParameterDeclaration = temp_Insert_T_ParameterDeclaration.Replace("{{columndatatype}}", column.DataType.ToSqlDataType().ToString());
+                        temp_Insert_T_ParameterDeclaration = temp_Insert_T_ParameterDeclaration.Replace("{{columnsize}}", column.ToSqlDataTypeSize());
 
                         //Update
-                        temp_Update_T_ParameterDeclaration = temp_Update_T_ParameterDeclaration.Replace("{{columnname}}", column.ColumnName);
-                        temp_Update_T_ParameterColumnValueAssignment = temp_Update_T_ParameterColumnValueAssignment.Replace("{{columnname}}", column.ColumnName);
+                        temp_Update_T_ParameterDeclaration = temp_Update_T_ParameterDeclaration.Replace("{{columnname}}", column.ColumnName);                        
                         temp_Update_T_ParameterDeclaration = temp_Update_T_ParameterDeclaration.Replace("{{columndatatype}}", column.DataType.ToSqlDataType().ToString());
-                       
+                        temp_Update_T_ParameterDeclaration = temp_Update_T_ParameterDeclaration.Replace("{{columnsize}}", column.ToSqlDataTypeSize());
+                        temp_Update_T_ParameterColumnValueAssignment = temp_Update_T_ParameterColumnValueAssignment.Replace("{{columnname}}", column.ColumnName);
+
                         //UDTT
                         temp_Update_T_UDTT_ParameterColumnValueAssignment = temp_Update_T_UDTT_ParameterColumnValueAssignment.Replace("{{columnname}}", column.ColumnName);
                         temp_Update_T_UDTT_ParameterColumnValueAssignment = temp_Update_T_UDTT_ParameterColumnValueAssignment.Replace(" {{tablename}}", tableDefinition.Name);                       
@@ -329,7 +332,9 @@ namespace Framework.DataAccessGateway.CG
                         foreach (var column in constraint.Value)
                         {
                             var temp_T_ParameterDeclaration = column.IsNullable ? Settings.T_ParameterDeclarationOptional : Settings.T_ParameterDeclaration;
-                            temp_T_ParameterDeclaration = temp_T_ParameterDeclaration.Replace("{{columnname}}", column.ColumnName).Replace("{{columndatatype}}", column.DataType.ToSqlDataType().ToString());
+                            temp_T_ParameterDeclaration = temp_T_ParameterDeclaration.Replace("{{columnname}}", column.ColumnName)
+                                .Replace("{{columndatatype}}", column.DataType.ToSqlDataType().ToString())
+                                .Replace("{{columnsize}}", column.ToSqlDataTypeSize());
 
                             var temp_T_ParameterColumnValue = Settings.T_ParameterColumnValue.Replace("{{columnname}}", column.ColumnName);
                             var temp_T_ParameterColumn = Settings.T_ParameterColumn.Replace("{{columnname}}", column.ColumnName);

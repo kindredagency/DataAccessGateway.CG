@@ -1,5 +1,6 @@
 ﻿using Framework.DataAccessGateway.CG.Models;
 using Framework.DataAccessGateway.Core;
+using Framework.DataAccessGateway.Schema;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -13,6 +14,25 @@ namespace Framework.DataAccessGateway.CG
 {
     internal static class ExtensionMethods
     {
+        public static string ToSqlDataTypeSize(this DBSchemaTableColumnDefinition column)
+        {
+            switch (column.DataType)
+            {
+                case DBHandlerDataType.Binary: return "(" + (column.Length == -1 ? "MAX" : column.Length.ToString()) + ")";
+                case DBHandlerDataType.Char: return "(" + (column.Length == -1 ? "MAX" : column.Length.ToString()) + ")";
+                case DBHandlerDataType.NChar: return "(" + (column.Length == -1 ? "MAX" : column.Length.ToString()) + ")";
+                case DBHandlerDataType.NVarChar: return "(" + (column.Length == -1 ? "MAX" : column.Length.ToString()) + ")";
+                case DBHandlerDataType.VarBinary: return "(" + (column.Length == -1 ? "MAX" : column.Length.ToString()) + ")";
+                case DBHandlerDataType.VarChar: return "(" + (column.Length == -1 ? "MAX" : column.Length.ToString()) + ")";
+
+                case DBHandlerDataType.DateTime2: return "(" + column.Precision + ")";
+                case DBHandlerDataType.DateTimeOffset: return "(" + column.Precision + ")";
+                case DBHandlerDataType.Decimal: return "(" + column.Precision + "," + column.Scale + ")";
+            }
+
+            return String.Empty;
+        }
+
         public static SqlDbType ToSqlDataType(this DBHandlerDataType dbHandlerDataType)
         {
             return DBHandlerDataMapping.Mappings.Where(c => c.DBHandlerDataType == dbHandlerDataType).FirstOrDefault().SqlDataType;
@@ -26,7 +46,7 @@ namespace Framework.DataAccessGateway.CG
         public static string ReadTextFile(this string fileName, string location)
         {
             if (!fileName.Contains(".txt"))
-                throw new Exception("File name is not a valid text file refference");
+                throw new Exception("File name is not a valid text file reference");
 
             Assembly currentAssembly = Assembly.GetExecutingAssembly();
 
