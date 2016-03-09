@@ -362,7 +362,7 @@ namespace Framework.DataAccessGateway.CG
                             Output = DataOutput.None,
                             TableName = tableDefinition.Name,
                             FKTableName = constraint.Key.Value,
-                            MethodInputType = new CodeParameterDeclarationExpression(new CodeTypeReference(tableDefinition.Name.ToModelExtName()), NameHelper.ModelParameterName),
+                            MethodInputType = new CodeParameterDeclarationExpression(new CodeTypeReference(constraint.Key.Value.ToModelKeyName()), NameHelper.ModelParameterName),
                             MethodOutputType = new CodeTypeReference(typeof(void))
                         });
 
@@ -375,7 +375,7 @@ namespace Framework.DataAccessGateway.CG
                             Output = DataOutput.ModelList,
                             TableName = tableDefinition.Name,
                             FKTableName = constraint.Key.Value,
-                            MethodInputType = new CodeParameterDeclarationExpression(new CodeTypeReference(tableDefinition.Name.ToModelExtName()), NameHelper.ModelParameterName),
+                            MethodInputType = new CodeParameterDeclarationExpression(new CodeTypeReference(constraint.Key.Value.ToModelKeyName()), NameHelper.ModelParameterName),
                             MethodOutputType = new CodeTypeReference(tableDefinition.Name.ToModelListName())
                         });
                     }
