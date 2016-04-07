@@ -162,7 +162,7 @@ namespace Framework.DataAccessGateway.CG.Models
                     }
                     if (Input == DataInput.Parameter)
                     {
-                        string statement = "_DBHandler..ExecuteQuery<{0}>(\"{1}\", new {{ {2} = {3} }}, CommandType.StoredProcedure);";
+                        string statement = "_DBHandler.ExecuteQuery<{0}>(\"{1}\", new {{ {2} = {3} }}, CommandType.StoredProcedure);";
 
                         statement = String.Format(statement, TableName.ToModelName(), StoredProcedureName, InputParameterName, MethodInputType.Name);
 
