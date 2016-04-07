@@ -15,6 +15,8 @@ namespace Framework.DataAccessGateway.CG.Models
 
         public DataInput Input { get; set; }
 
+        public string InputParameterName { get; set; }
+
         public DataOutput Output { get; set; }
 
         public string TableName { get; set; }
@@ -76,7 +78,7 @@ namespace Framework.DataAccessGateway.CG.Models
                         return new CodeExpressionStatement(new CodeSnippetExpression(statement));
 
                     }
-                    else if (Input == DataInput.ModelList)
+                    if (Input == DataInput.ModelList)
                     {
                         string statement = "_DBHandler.ExecuteNonQuery(\"{0}\", new {{ {1} = {2}.ToDataTable() }}, CommandType.StoredProcedure);";
 
@@ -84,17 +86,24 @@ namespace Framework.DataAccessGateway.CG.Models
 
                         return new CodeExpressionStatement(new CodeSnippetExpression(statement));
                     }
+                    if (Input == DataInput.Parameter)
+                    {
+                        string statement = "_DBHandler.ExecuteNonQuery(\"{0}\", new {{ {1} = {2} }}, CommandType.StoredProcedure);";
+
+                        statement = String.Format(statement, StoredProcedureName, InputParameterName, MethodInputType.Name);
+
+                        return new CodeExpressionStatement(new CodeSnippetExpression(statement));
+                    }
                     else
-                    {                        
+                    {
                         string statement = "_DBHandler.ExecuteNonQuery(\"{0}\", {1}, CommandType.StoredProcedure);";
 
                         statement = String.Format(statement, StoredProcedureName, MethodInputType.Name);
 
                         return new CodeExpressionStatement(new CodeSnippetExpression(statement));
                     }
-                        
                 }
-                else if (Output == DataOutput.Model)
+                if (Output == DataOutput.Model)
                 {
                     //If return model    
                     if (Input == DataInput.None)
@@ -106,11 +115,19 @@ namespace Framework.DataAccessGateway.CG.Models
                         return new CodeMethodReturnStatement(new CodeSnippetExpression(statement));
 
                     }
-                    else if (Input == DataInput.ModelList)
+                    if (Input == DataInput.ModelList)
                     {
                         string statement = "_DBHandler.ExecuteQuery<{0}>(\"{1}\", new {{ {2} = {3}.ToDataTable() }}, CommandType.StoredProcedure).FirstOrDefault();";
 
                         statement = String.Format(statement, TableName.ToModelName(), StoredProcedureName, TableName, MethodInputType.Name);
+
+                        return new CodeMethodReturnStatement(new CodeSnippetExpression(statement));
+                    }
+                    if (Input == DataInput.Parameter)
+                    {
+                        string statement = "_DBHandler.ExecuteQuery<{0}>(\"{1}\", new {{ {2} = {3} }}, CommandType.StoredProcedure);";
+
+                        statement = String.Format(statement, TableName.ToModelName(), StoredProcedureName, InputParameterName, MethodInputType.Name);
 
                         return new CodeMethodReturnStatement(new CodeSnippetExpression(statement));
                     }
@@ -122,9 +139,8 @@ namespace Framework.DataAccessGateway.CG.Models
 
                         return new CodeMethodReturnStatement(new CodeSnippetExpression(statement));
                     }
-
                 }
-                else if (Output == DataOutput.ModelList)
+                if (Output == DataOutput.ModelList)
                 {
                     //If return model    
                     if (Input == DataInput.None)
@@ -136,11 +152,19 @@ namespace Framework.DataAccessGateway.CG.Models
                         return new CodeMethodReturnStatement(new CodeSnippetExpression(statement));
 
                     }
-                    else if (Input == DataInput.ModelList)
+                    if (Input == DataInput.ModelList)
                     {
                         string statement = "_DBHandler.ExecuteQuery<{0}>(\"{1}\", new {{ {2} = {3}.ToDataTable() }}, CommandType.StoredProcedure);";
 
                         statement = String.Format(statement, TableName.ToModelName(), StoredProcedureName, TableName, MethodInputType.Name);
+
+                        return new CodeMethodReturnStatement(new CodeSnippetExpression(statement));
+                    }
+                    if (Input == DataInput.Parameter)
+                    {
+                        string statement = "_DBHandler..ExecuteQuery<{0}>(\"{1}\", new {{ {2} = {3} }}, CommandType.StoredProcedure);";
+
+                        statement = String.Format(statement, TableName.ToModelName(), StoredProcedureName, InputParameterName, MethodInputType.Name);
 
                         return new CodeMethodReturnStatement(new CodeSnippetExpression(statement));
                     }
