@@ -49,7 +49,7 @@
 		var code = new CodeFactory(connectionString, Framework.DataAccessGateway.Core.DBHandlerType.DbHandlerMSSQL);
 
 		Settings.ModelNamespace = dte.Solution.FindProjectItem(Host.TemplateFile).ContainingProject.Name + "." + builder.InitialCatalog;
-		Settings.ModelCustomDataAnnotations = false;
+		Settings.ModelCustomDataAnnotations = true;
 
 		var models = code.Models();
 						

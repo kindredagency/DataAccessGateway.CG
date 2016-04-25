@@ -102,11 +102,15 @@ namespace Framework.DataAccessGateway.CG
                                 {
                                     new CodeAttributeArgument
                                     {
-                                        Value = new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(typeof(DBHandlerDataType)), column.DataType.ToString())
+                                       Value = new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(typeof(DBHandlerDataType)), column.DataType.ToString())
                                     },
                                     new CodeAttributeArgument
                                     {
                                         Value = new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(typeof(ParameterDirection)), column.IsIdentity ? ParameterDirection.ReturnValue.ToString() : ParameterDirection.Input.ToString())
+                                    },
+                                    new CodeAttributeArgument
+                                    {
+                                        Value = new CodePrimitiveExpression(column.IsIdentity)
                                     }
                                 }
                             }
@@ -157,6 +161,10 @@ namespace Framework.DataAccessGateway.CG
                                     new CodeAttributeArgument
                                     {
                                         Value = new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(typeof(ParameterDirection)), column.IsIdentity ? ParameterDirection.ReturnValue.ToString() : ParameterDirection.Input.ToString())
+                                    },
+                                    new CodeAttributeArgument
+                                    {
+                                        Value = new CodePrimitiveExpression(column.IsIdentity)
                                     }
                                 }
                             }
@@ -208,6 +216,10 @@ namespace Framework.DataAccessGateway.CG
                                     new CodeAttributeArgument
                                     {
                                         Value = new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(typeof(ParameterDirection)), column.IsIdentity ? ParameterDirection.ReturnValue.ToString() : ParameterDirection.Input.ToString())
+                                    },
+                                    new CodeAttributeArgument
+                                    {
+                                        Value = new CodePrimitiveExpression(column.IsIdentity)
                                     }
                                 }
                             }
@@ -259,6 +271,10 @@ namespace Framework.DataAccessGateway.CG
                                     new CodeAttributeArgument
                                     {
                                         Value = new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(typeof(ParameterDirection)), column.IsIdentity ? ParameterDirection.ReturnValue.ToString() : ParameterDirection.Input.ToString())
+                                    },
+                                    new CodeAttributeArgument
+                                    {
+                                        Value = new CodePrimitiveExpression(column.IsIdentity)
                                     }
                                 }
                             }

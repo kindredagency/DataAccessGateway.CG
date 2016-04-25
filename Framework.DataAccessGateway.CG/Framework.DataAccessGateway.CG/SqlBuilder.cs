@@ -60,6 +60,7 @@ namespace Framework.DataAccessGateway.CG
                         string temp_T_ParameterPrimaryKeyDeclarationForOriginalValue = Settings.T_ParameterPrimaryKeyDeclarationForOriginalValue;
                         temp_T_ParameterPrimaryKeyDeclarationForOriginalValue = temp_T_ParameterPrimaryKeyDeclarationForOriginalValue.Replace("{{columnname}}", column.ColumnName);
                         temp_T_ParameterPrimaryKeyDeclarationForOriginalValue = temp_T_ParameterPrimaryKeyDeclarationForOriginalValue.Replace("{{columndatatype}}", column.DataType.ToSqlDataType().ToString());
+                        temp_T_ParameterPrimaryKeyDeclarationForOriginalValue = temp_T_ParameterPrimaryKeyDeclarationForOriginalValue.Replace("{{columnsize}}", column.ToSqlDataTypeSize());
 
                         string temp_T_ParameterColumnValue = Settings.T_ParameterColumnValue;
                         temp_T_ParameterColumnValue = temp_T_ParameterColumnValue.Replace("{{columnname}}", column.ColumnName);                       
@@ -263,11 +264,13 @@ namespace Framework.DataAccessGateway.CG
                         T_ProcGetByColomn = T_ProcGetByColomn.Replace("{{tablename}}", tableDefinition.Name);
                         T_ProcGetByColomn = T_ProcGetByColomn.Replace("{{column}}", column.ColumnName);
                         T_ProcGetByColomn = T_ProcGetByColomn.Replace("{{columnsqldatatype}}", column.DataType.ToSqlDataType().ToString());
+                        T_ProcGetByColomn = T_ProcGetByColomn.Replace("{{columnsize}}", column.ToSqlDataTypeSize());
                         T_ProcGetByColomn = T_ProcGetByColomn.Replace("{{selectcolumns}}", select_T_ParameterColumn.ToString());
 
                         T_ProcDeleteByColomn = T_ProcDeleteByColomn.Replace("{{tablename}}", tableDefinition.Name);
                         T_ProcDeleteByColomn = T_ProcDeleteByColomn.Replace("{{column}}", column.ColumnName);
                         T_ProcDeleteByColomn = T_ProcDeleteByColomn.Replace("{{columnsqldatatype}}", column.DataType.ToSqlDataType().ToString());
+                        T_ProcDeleteByColomn = T_ProcDeleteByColomn.Replace("{{columnsize}}", column.ToSqlDataTypeSize());
 
                         storedProcedures.Add(new StoredProcedure
                         {

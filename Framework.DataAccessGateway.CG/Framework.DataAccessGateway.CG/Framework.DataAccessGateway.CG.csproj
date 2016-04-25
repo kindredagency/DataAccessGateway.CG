@@ -31,7 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Framework.DataAccessGateway.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Framework.DataAccessGateway.Core.1.0.0\lib\Framework.DataAccessGateway.Core.dll</HintPath>
+      <HintPath>..\packages\Framework.DataAccessGateway.Core.1.0.2\lib\Framework.DataAccessGateway.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Framework.DataAccessGateway.Schema, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">

@@ -3,7 +3,7 @@ DROP PROC _{{tablename}}DeleteBy{{column}}
 GO
 CREATE PROCEDURE [_{{tablename}}DeleteBy{{column}}]
 (
-@{{column}} {{columnsqldatatype}}
+@{{column}} {{columnsqldatatype}}{{columnsize}}
 )
 AS
 BEGIN
