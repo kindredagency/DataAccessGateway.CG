@@ -176,32 +176,102 @@ namespace Framework.DataAccessGateway.CG
 
                 #endregion
 
-                #region Extended Model
+                #region Insert Model
 
-                CodeNamespace codeNamespace_Ext = new CodeNamespace(Settings.ModelNamespace);               
+                CodeNamespace codeNamespace_Insert = new CodeNamespace(Settings.ModelNamespace);
 
                 foreach (var import in Settings.ModelImport)
                 {
-                    codeNamespace_Ext.Imports.Add(new CodeNamespaceImport(import));                    
+                    codeNamespace_Insert.Imports.Add(new CodeNamespaceImport(import));
                 }
 
-                CodeTypeDeclaration codeTypeDeclaration_Ext = new CodeTypeDeclaration(tableDefinition.Name.ToModelExtName());    
+                CodeTypeDeclaration codeTypeDeclaration_Insert = new CodeTypeDeclaration(tableDefinition.Name.ToModelInsertName());
+                codeTypeDeclaration_Insert.IsClass = true;
+                codeTypeDeclaration_Insert.TypeAttributes = System.Reflection.TypeAttributes.Public;
+
+                foreach (var column in tableDefinition.ColumnDefinitionList.Where(c => !c.IsIdentity && c.DataType.IsAllowedForInsertOrUpdate()))
+                {
+                    CodeMemberField codeMemberProperty = new CodeMemberField();
+                    codeMemberProperty.Name = column.ColumnName + " { get; set; }";
+                    codeMemberProperty.Attributes = MemberAttributes.Public | MemberAttributes.Final;
+                    
+                    if (!column.IsNullable)
+                    {
+                        //Non nullable columns 
+                        codeMemberProperty.Type = new CodeTypeReference(column.DataType.ToCSharpType());
+                    }
+                    else
+                    {
+                        if (column.DataType.ToCSharpType().IsNonNullable())
+                        {
+                            codeMemberProperty.Type = new CodeTypeReference(column.DataType.ToCSharpType());
+                        }
+                        else
+                        {
+                            codeMemberProperty.Type = new CodeTypeReference(typeof(Nullable<>));
+                            codeMemberProperty.Type.TypeArguments.Add(new CodeTypeReference(column.DataType.ToCSharpType()));
+                        }
+                    }
+
+                    if (Settings.ModelCustomDataAnnotations)
+                    {
+                        codeMemberProperty.CustomAttributes = new CodeAttributeDeclarationCollection(
+                        new CodeAttributeDeclaration[]
+                        {
+                            new CodeAttributeDeclaration
+                            {
+                                Name = "DBHandlerProperty",
+                                Arguments =
+                                {
+                                    new CodeAttributeArgument
+                                    {
+                                       Value = new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(typeof(DBHandlerDataType)), column.DataType.ToString())
+                                    },
+                                    new CodeAttributeArgument
+                                    {
+                                        Value = new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(typeof(ParameterDirection)), column.IsIdentity ? ParameterDirection.ReturnValue.ToString() : ParameterDirection.Input.ToString())
+                                    },
+                                    new CodeAttributeArgument
+                                    {
+                                        Value = new CodePrimitiveExpression(column.IsIdentity)
+                                    }
+                                }
+                            }
+                        });
+                    }
+
+                    codeTypeDeclaration_Insert.Members.Add(codeMemberProperty);
+                }
+
+
+                #endregion
+
+                #region Update Model
+
+                CodeNamespace codeNamespace_Update = new CodeNamespace(Settings.ModelNamespace);               
+
+                foreach (var import in Settings.ModelImport)
+                {
+                    codeNamespace_Update.Imports.Add(new CodeNamespaceImport(import));                    
+                }
+
+                CodeTypeDeclaration codeTypeDeclaration_Update = new CodeTypeDeclaration(tableDefinition.Name.ToModelUpdateName());    
                               
-                codeTypeDeclaration_Ext.IsClass = true;
-                codeTypeDeclaration_Ext.TypeAttributes = System.Reflection.TypeAttributes.Public;             
+                codeTypeDeclaration_Update.IsClass = true;
+                codeTypeDeclaration_Update.TypeAttributes = System.Reflection.TypeAttributes.Public;             
 
                 //Add underscore properties 
                 foreach (var column in tableDefinition.ColumnDefinitionList.Where(c => c.DBSchemaConstraintDefinitionList.Any(d => d.Constraint == ConstraintType.PrimaryKey)))
                 {
-                    CodeMemberField codeMemberProperty_Ext = new CodeMemberField();                   
+                    CodeMemberField codeMemberProperty_Update = new CodeMemberField();                   
 
-                    codeMemberProperty_Ext.Name = "_" + column.ColumnName + " { get; set; }";
-                    codeMemberProperty_Ext.Attributes = MemberAttributes.Public | MemberAttributes.Final;
-                    codeMemberProperty_Ext.Type = new CodeTypeReference(column.DataType.ToCSharpType());
+                    codeMemberProperty_Update.Name = "_" + column.ColumnName + " { get; set; }";
+                    codeMemberProperty_Update.Attributes = MemberAttributes.Public | MemberAttributes.Final;
+                    codeMemberProperty_Update.Type = new CodeTypeReference(column.DataType.ToCSharpType());
 
                     if (Settings.ModelCustomDataAnnotations)
                     {
-                        codeMemberProperty_Ext.CustomAttributes = new CodeAttributeDeclarationCollection(
+                        codeMemberProperty_Update.CustomAttributes = new CodeAttributeDeclarationCollection(
                         new CodeAttributeDeclaration[]
                         {
                             new CodeAttributeDeclaration
@@ -226,11 +296,11 @@ namespace Framework.DataAccessGateway.CG
                         });
                     }                   
 
-                    codeTypeDeclaration_Ext.Members.Add(codeMemberProperty_Ext);                   
+                    codeTypeDeclaration_Update.Members.Add(codeMemberProperty_Update);                   
                 }
 
                 //Add normal properties
-                foreach (var column in tableDefinition.ColumnDefinitionList)
+                foreach (var column in tableDefinition.ColumnDefinitionList.Where(c => !c.IsIdentity && c.DataType.IsAllowedForInsertOrUpdate()))
                 {
                     CodeMemberField codeMemberProperty = new CodeMemberField();
                     codeMemberProperty.Name = column.ColumnName + " { get; set; }";
@@ -281,14 +351,15 @@ namespace Framework.DataAccessGateway.CG
                        });
                     }
 
-                    codeTypeDeclaration_Ext.Members.Add(codeMemberProperty);
+                    codeTypeDeclaration_Update.Members.Add(codeMemberProperty);
                 }
 
                 #endregion
 
                 codeNamespace.Types.Add(codeTypeDeclaration_Key);
                 codeNamespace.Types.Add(codeTypeDeclaration);
-                codeNamespace.Types.Add(codeTypeDeclaration_Ext);
+                codeNamespace.Types.Add(codeTypeDeclaration_Update);
+                codeNamespace.Types.Add(codeTypeDeclaration_Insert);
 
                 codeCompileUnit.Namespaces.Add(codeNamespace);
 

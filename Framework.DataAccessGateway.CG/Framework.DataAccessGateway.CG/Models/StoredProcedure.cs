@@ -205,7 +205,8 @@ namespace Framework.DataAccessGateway.CG.Models
         Fk_Key,
         Model,       
         Model_Key,
-        Model_Ext,
+        Model_Insert,
+        Model_Update,
         ModelList
        
     }

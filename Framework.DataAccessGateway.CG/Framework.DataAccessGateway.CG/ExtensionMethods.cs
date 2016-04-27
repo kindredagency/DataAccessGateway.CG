@@ -75,7 +75,9 @@ namespace Framework.DataAccessGateway.CG
 
         public static string TrimEndFrom(this string value, string stringToTrim)
         {
-            return value.Substring(0, value.LastIndexOf(stringToTrim)).TrimEnd();
+            var tempString = value.Trim();
+            //return tempString.Length > 0 ?  tempString.Substring(0, value.LastIndexOf(stringToTrim, StringComparison.Ordinal)).TrimEnd() : tempString;
+            return tempString.Length > 0 ? tempString.TrimEnd(stringToTrim.ToCharArray()) : tempString;
         }
         
         public static string ToCreateSql(this List<StoredProcedure> storedProcedures)

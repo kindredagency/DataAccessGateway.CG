@@ -106,6 +106,7 @@ namespace Framework.DataAccessGateway.CG
                     StringBuilder update_T_ParameterDeclaration = new StringBuilder();
                     StringBuilder update_T_ParameterColumnValueAssignment = new StringBuilder();
                     StringBuilder update_T_UDTT_ParameterColumnValueAssignment = new StringBuilder();
+                    StringBuilder insert_T_UDTT_ParameterColumn = new StringBuilder();
                     StringBuilder select_T_ParameterColumn = new StringBuilder();                   
                  
                     for(int count = 0; count < tableDefinition.ColumnDefinitionList.Count; count++)
@@ -119,6 +120,7 @@ namespace Framework.DataAccessGateway.CG
                         string temp_Update_T_ParameterColumnValueAssignment = Settings.T_ParameterColumnValueAssignment;
                         string temp_Update_T_UDTT_ParameterColumnValueAssignment = Settings.T_UDTT_ParameterColumnValueAssignment;
                         string temp_Select_T_ParameterColumn = Settings.T_ParameterColumn;
+                        string temp_Insert_T_UDDT_ParameterColumn = Settings.T_ParameterColumn;
 
                         //Insert
                         temp_Insert_T_ParameterValue = temp_Insert_T_ParameterValue.Replace("{{columnname}}", column.ColumnName);
@@ -135,7 +137,8 @@ namespace Framework.DataAccessGateway.CG
 
                         //UDTT
                         temp_Update_T_UDTT_ParameterColumnValueAssignment = temp_Update_T_UDTT_ParameterColumnValueAssignment.Replace("{{columnname}}", column.ColumnName);
-                        temp_Update_T_UDTT_ParameterColumnValueAssignment = temp_Update_T_UDTT_ParameterColumnValueAssignment.Replace(" {{tablename}}", tableDefinition.Name);                       
+                        temp_Update_T_UDTT_ParameterColumnValueAssignment = temp_Update_T_UDTT_ParameterColumnValueAssignment.Replace(" {{tablename}}", tableDefinition.Name);
+                        temp_Insert_T_UDDT_ParameterColumn = temp_Insert_T_UDDT_ParameterColumn.Replace("{{columnname}}", column.ColumnName);
 
                         //Select
                         temp_Select_T_ParameterColumn = temp_Select_T_ParameterColumn.Replace("{{columnname}}", column.ColumnName);
@@ -146,8 +149,10 @@ namespace Framework.DataAccessGateway.CG
                             temp_Update_T_ParameterDeclaration = temp_Update_T_ParameterDeclaration.TrimEndFrom(",");
                             temp_Update_T_ParameterColumnValueAssignment = temp_Update_T_ParameterColumnValueAssignment.TrimEndFrom(",");
                             temp_Update_T_UDTT_ParameterColumnValueAssignment = temp_Update_T_UDTT_ParameterColumnValueAssignment.TrimEndFrom(",");
+                            temp_Insert_T_UDDT_ParameterColumn = temp_Insert_T_UDDT_ParameterColumn.TrimEndFrom(",");
                             temp_Insert_T_ParameterColumn = temp_Insert_T_ParameterColumn.TrimEndFrom(",");
                             temp_Insert_T_ParameterValue = temp_Insert_T_ParameterValue.TrimEndFrom(",");
+
                             temp_Select_T_ParameterColumn = temp_Select_T_ParameterColumn.TrimEndFrom(",");
                         }
 
@@ -158,7 +163,8 @@ namespace Framework.DataAccessGateway.CG
                             insert_T_ParameterValue.Append(temp_Insert_T_ParameterValue);
                             update_T_ParameterDeclaration.Append(temp_Update_T_ParameterDeclaration);
                             update_T_ParameterColumnValueAssignment.Append(temp_Update_T_ParameterColumnValueAssignment);
-                            update_T_UDTT_ParameterColumnValueAssignment.Append(temp_Update_T_UDTT_ParameterColumnValueAssignment);                           
+                            update_T_UDTT_ParameterColumnValueAssignment.Append(temp_Update_T_UDTT_ParameterColumnValueAssignment);
+                            insert_T_UDTT_ParameterColumn.Append(temp_Insert_T_UDDT_ParameterColumn);
                         }
 
                         select_T_ParameterColumn.Append(temp_Select_T_ParameterColumn);   
@@ -171,37 +177,37 @@ namespace Framework.DataAccessGateway.CG
                     //Insert, Update, Delete, GetAll, GetByKey
 
                     var T_ProcInsert = Settings.T_ProcInsert.Replace("{{tablename}}", tableDefinition.Name);
-                    T_ProcInsert = T_ProcInsert.Replace("{{columndeclarations}}", insert_T_ParameterDeclaration.ToString());
-                    T_ProcInsert = T_ProcInsert.Replace("{{columns}}", insert_T_ParameterColumn.ToString());
-                    T_ProcInsert = T_ProcInsert.Replace("{{columnexecutions}}", insert_T_ParameterValue.ToString());
+                    T_ProcInsert = T_ProcInsert.Replace("{{columndeclarations}}", insert_T_ParameterDeclaration.ToString().TrimEndFrom(","));
+                    T_ProcInsert = T_ProcInsert.Replace("{{columns}}", insert_T_ParameterColumn.ToString().TrimEndFrom(","));
+                    T_ProcInsert = T_ProcInsert.Replace("{{columnexecutions}}", insert_T_ParameterValue.ToString().TrimEndFrom(","));
                     T_ProcInsert = T_ProcInsert.Replace("{{return}}", tableDefinition.ColumnDefinitionList.FirstOrDefault(c => c.IsIdentity == true) != null ? Settings.T_ReturnIdentity : "");
 
                     var T_ProcUpdate = Settings.T_ProcUpdate.Replace("{{tablename}}", tableDefinition.Name);
-                    T_ProcUpdate = T_ProcUpdate.Replace("{{columndeclarations}}", update_T_ParameterDeclaration.ToString() + "," + T_ParameterPrimaryKeyDeclarationForOriginalValue.ToString());
-                    T_ProcUpdate = T_ProcUpdate.Replace("{{columns}}", update_T_ParameterColumnValueAssignment.ToString());
-                    T_ProcUpdate = T_ProcUpdate.Replace("{{columnexecutions}}", T_ParameterPrimaryKeyColumnValueOriginalValue.ToString());
+                    T_ProcUpdate = T_ProcUpdate.Replace("{{columndeclarations}}", update_T_ParameterDeclaration.ToString().TrimEndFrom(",") + "," + T_ParameterPrimaryKeyDeclarationForOriginalValue.ToString().TrimEndFrom(","));
+                    T_ProcUpdate = T_ProcUpdate.Replace("{{columns}}", update_T_ParameterColumnValueAssignment.ToString().TrimEndFrom(","));
+                    T_ProcUpdate = T_ProcUpdate.Replace("{{columnexecutions}}", T_ParameterPrimaryKeyColumnValueOriginalValue.ToString().TrimEndFrom(","));
 
                     var T_ProcGetAll = Settings.T_ProcGetAll.Replace("{{tablename}}", tableDefinition.Name);
-                    T_ProcGetAll = T_ProcGetAll.Replace("{{selectcolumns}}", select_T_ParameterColumn.ToString());
+                    T_ProcGetAll = T_ProcGetAll.Replace("{{selectcolumns}}", select_T_ParameterColumn.ToString().TrimEndFrom(","));
 
                     var T_ProcDeleteByKey = Settings.T_ProcDeleteByKey.Replace("{{tablename}}", tableDefinition.Name);
-                    T_ProcDeleteByKey = T_ProcDeleteByKey.Replace("{{columndeclarations}}", T_ParameterPrimaryKeyDeclaration.ToString());
-                    T_ProcDeleteByKey = T_ProcDeleteByKey.Replace("{{columnexecutions}}", T_ParameterPrimaryKeyColumnValue.ToString());
+                    T_ProcDeleteByKey = T_ProcDeleteByKey.Replace("{{columndeclarations}}", T_ParameterPrimaryKeyDeclaration.ToString().TrimEndFrom(","));
+                    T_ProcDeleteByKey = T_ProcDeleteByKey.Replace("{{columnexecutions}}", T_ParameterPrimaryKeyColumnValue.ToString().TrimEndFrom(","));
 
                     var T_ProcGetByKey = Settings.T_ProcGetByKey.Replace("{{tablename}}", tableDefinition.Name);
-                    T_ProcGetByKey = T_ProcGetByKey.Replace("{{columndeclarations}}", T_ParameterPrimaryKeyDeclaration.ToString());
-                    T_ProcGetByKey = T_ProcGetByKey.Replace("{{columnexecutions}}", T_ParameterPrimaryKeyColumnValue.ToString());
-                    T_ProcGetByKey = T_ProcGetByKey.Replace("{{selectcolumns}}", select_T_ParameterColumn.ToString());                  
+                    T_ProcGetByKey = T_ProcGetByKey.Replace("{{columndeclarations}}", T_ParameterPrimaryKeyDeclaration.ToString().TrimEndFrom(","));
+                    T_ProcGetByKey = T_ProcGetByKey.Replace("{{columnexecutions}}", T_ParameterPrimaryKeyColumnValue.ToString().TrimEndFrom(","));
+                    T_ProcGetByKey = T_ProcGetByKey.Replace("{{selectcolumns}}", select_T_ParameterColumn.ToString().TrimEndFrom(","));                  
                    
                     storedProcedures.Add(new StoredProcedure
                     {
                         SqlStatement = T_ProcInsert,
                         Action = SqlAction.Insert,
                         Type = SqlType.NonQuery,
-                        Input = DataInput.Model,
+                        Input = DataInput.Model_Insert,
                         Output = DataOutput.None,
                         TableName = tableDefinition.Name,
-                        MethodInputType = new CodeParameterDeclarationExpression(new CodeTypeReference(tableDefinition.Name), NameHelper.ModelParameterName),
+                        MethodInputType = new CodeParameterDeclarationExpression(new CodeTypeReference(tableDefinition.Name.ToModelInsertName()), NameHelper.ModelParameterName),
                         MethodOutputType = new CodeTypeReference(typeof(void))
                     });
 
@@ -210,10 +216,10 @@ namespace Framework.DataAccessGateway.CG
                         SqlStatement = T_ProcUpdate,
                         Action = SqlAction.Update,
                         Type = SqlType.NonQuery,
-                        Input = DataInput.Model_Ext,
+                        Input = DataInput.Model_Update,
                         Output = DataOutput.None,
                         TableName = tableDefinition.Name,
-                        MethodInputType = new CodeParameterDeclarationExpression(new CodeTypeReference(tableDefinition.Name.ToModelExtName()), NameHelper.ModelParameterName),
+                        MethodInputType = new CodeParameterDeclarationExpression(new CodeTypeReference(tableDefinition.Name.ToModelUpdateName()), NameHelper.ModelParameterName),
                         MethodOutputType = new CodeTypeReference(typeof(void))
                     });
 
@@ -265,12 +271,12 @@ namespace Framework.DataAccessGateway.CG
                         T_ProcGetByColomn = T_ProcGetByColomn.Replace("{{column}}", column.ColumnName);
                         T_ProcGetByColomn = T_ProcGetByColomn.Replace("{{columnsqldatatype}}", column.DataType.ToSqlDataType().ToString());
                         T_ProcGetByColomn = T_ProcGetByColomn.Replace("{{columnsize}}", column.ToSqlDataTypeSize());
-                        T_ProcGetByColomn = T_ProcGetByColomn.Replace("{{selectcolumns}}", select_T_ParameterColumn.ToString());
+                        T_ProcGetByColomn = T_ProcGetByColomn.Replace("{{selectcolumns}}", select_T_ParameterColumn.ToString().TrimEndFrom(","));
 
                         T_ProcDeleteByColomn = T_ProcDeleteByColomn.Replace("{{tablename}}", tableDefinition.Name);
                         T_ProcDeleteByColomn = T_ProcDeleteByColomn.Replace("{{column}}", column.ColumnName);
                         T_ProcDeleteByColomn = T_ProcDeleteByColomn.Replace("{{columnsqldatatype}}", column.DataType.ToSqlDataType().ToString());
-                        T_ProcDeleteByColomn = T_ProcDeleteByColomn.Replace("{{columnsize}}", column.ToSqlDataTypeSize());
+                        T_ProcDeleteByColomn = T_ProcDeleteByColomn.Replace("{{columnsize}}", column.ToSqlDataTypeSize().TrimEndFrom(","));
 
                         storedProcedures.Add(new StoredProcedure
                         {
@@ -387,8 +393,8 @@ namespace Framework.DataAccessGateway.CG
 
                     //UDTT Procedures
 
-                    var T_UDTT_ProcInsert = Settings.T_UDTT_ProcInsert.Replace("{{tablename}}", tableDefinition.Name).Replace("{{columns}}", select_T_ParameterColumn.ToString()).Replace("{{selectcolumns}}", select_T_ParameterColumn.ToString());
-                    var T_UDTT_ProcUpdate = Settings.T_UDTT_ProcUpdate.Replace("{{tablename}}", tableDefinition.Name).Replace("{{columns}}", update_T_UDTT_ParameterColumnValueAssignment.ToString()).Replace("{{columnexecutions}}", T_UDTT_ParameterPrimaryKeyColumnValue.ToString());
+                    var T_UDTT_ProcInsert = Settings.T_UDTT_ProcInsert.Replace("{{tablename}}", tableDefinition.Name).Replace("{{columns}}", insert_T_UDTT_ParameterColumn.ToString().TrimEndFrom(",")).Replace("{{selectcolumns}}", insert_T_UDTT_ParameterColumn.ToString().TrimEndFrom(","));
+                    var T_UDTT_ProcUpdate = Settings.T_UDTT_ProcUpdate.Replace("{{tablename}}", tableDefinition.Name).Replace("{{columns}}", update_T_UDTT_ParameterColumnValueAssignment.ToString().TrimEndFrom(",")).Replace("{{columnexecutions}}", T_UDTT_ParameterPrimaryKeyColumnValue.ToString().TrimEndFrom(","));
 
                     storedProcedures.Add(new StoredProcedure
                     {
