@@ -1,1 +1,1 @@
-﻿{{tablename}}.[{{columnname}}] = TVP.[{{columnname}}] and
+﻿[{{tablename}}].[{{columnname}}] = TVP.[{{columnname}}] and

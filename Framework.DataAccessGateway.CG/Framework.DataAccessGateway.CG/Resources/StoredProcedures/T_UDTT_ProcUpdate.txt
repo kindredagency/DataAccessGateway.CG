@@ -7,6 +7,6 @@ CREATE PROCEDURE [_{{tablename}}_UDTT_Update]
 )
 AS
 BEGIN
-UPDATE [{{tablename}}] SET {{columns}} FROM  {{tablename}}, @{{tablename}} as TVP WHERE {{columnexecutions}}
+UPDATE [{{tablename}}] SET {{columns}} FROM  [{{tablename}}], @{{tablename}} as TVP WHERE {{columnexecutions}}
 END
 GO

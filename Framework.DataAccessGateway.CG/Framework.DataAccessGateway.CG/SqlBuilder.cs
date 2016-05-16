@@ -137,7 +137,7 @@ namespace Framework.DataAccessGateway.CG
 
                         //UDTT
                         temp_Update_T_UDTT_ParameterColumnValueAssignment = temp_Update_T_UDTT_ParameterColumnValueAssignment.Replace("{{columnname}}", column.ColumnName);
-                        temp_Update_T_UDTT_ParameterColumnValueAssignment = temp_Update_T_UDTT_ParameterColumnValueAssignment.Replace(" {{tablename}}", tableDefinition.Name);
+                        temp_Update_T_UDTT_ParameterColumnValueAssignment = temp_Update_T_UDTT_ParameterColumnValueAssignment.Replace("{{tablename}}", tableDefinition.Name);
                         temp_Insert_T_UDDT_ParameterColumn = temp_Insert_T_UDDT_ParameterColumn.Replace("{{columnname}}", column.ColumnName);
 
                         //Select
