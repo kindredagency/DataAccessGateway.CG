@@ -1,12 +1,11 @@
-﻿using Framework.DataAccessGateway.Core;
-using Framework.DataAccessGateway.Schema;
-using System;
+﻿using System;
+using System.CodeDom;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Data;
-using System.Collections.Generic;
 using Framework.DataAccessGateway.CG.Models;
-using System.CodeDom;
+using Framework.DataAccessGateway.Core;
+using Framework.DataAccessGateway.Schema;
 
 namespace Framework.DataAccessGateway.CG
 {
@@ -35,7 +34,7 @@ namespace Framework.DataAccessGateway.CG
                 var schemaHandler = new DBSchemaHandler(ConnectionString, DBHandlerType);
                 var databaseDefinition = schemaHandler.GetDataBaseDefinition();
 
-                var allowedTables = databaseDefinition.Tables.Where(c => !Settings.OmittedTables.Contains(c.Name));
+                var allowedTables = databaseDefinition.Tables.Where(c => !Settings.OmittedTables.Contains(c.Name)).Where(c => Settings.IncludedTables.Contains(c.Name));
 
                 List<StoredProcedure> storedProcedures = new List<StoredProcedure>();
 
@@ -180,7 +179,7 @@ namespace Framework.DataAccessGateway.CG
                     T_ProcInsert = T_ProcInsert.Replace("{{columndeclarations}}", insert_T_ParameterDeclaration.ToString().TrimEndFrom(","));
                     T_ProcInsert = T_ProcInsert.Replace("{{columns}}", insert_T_ParameterColumn.ToString().TrimEndFrom(","));
                     T_ProcInsert = T_ProcInsert.Replace("{{columnexecutions}}", insert_T_ParameterValue.ToString().TrimEndFrom(","));
-                    T_ProcInsert = T_ProcInsert.Replace("{{return}}", tableDefinition.ColumnDefinitionList.FirstOrDefault(c => c.IsIdentity == true) != null ? Settings.T_ReturnIdentity : "");
+                    T_ProcInsert = T_ProcInsert.Replace("{{return}}", tableDefinition.ColumnDefinitionList.FirstOrDefault(c => c.IsIdentity) != null ? Settings.T_ReturnIdentity : "");
 
                     var T_ProcUpdate = Settings.T_ProcUpdate.Replace("{{tablename}}", tableDefinition.Name);
                     T_ProcUpdate = T_ProcUpdate.Replace("{{columndeclarations}}", update_T_ParameterDeclaration.ToString().TrimEndFrom(",") + "," + T_ParameterPrimaryKeyDeclarationForOriginalValue.ToString().TrimEndFrom(","));
@@ -244,7 +243,7 @@ namespace Framework.DataAccessGateway.CG
                         Output = DataOutput.Model,
                         TableName = tableDefinition.Name,
                         MethodInputType = new CodeParameterDeclarationExpression(new CodeTypeReference(tableDefinition.Name.ToModelKeyName()), NameHelper.ModelParameterName),
-                        MethodOutputType = new CodeTypeReference(tableDefinition.Name),
+                        MethodOutputType = new CodeTypeReference(tableDefinition.Name)
                     });
 
                     storedProcedures.Add(new StoredProcedure
@@ -437,7 +436,7 @@ namespace Framework.DataAccessGateway.CG
             var schemaHandler = new DBSchemaHandler(ConnectionString, DBHandlerType);
             var databaseDefinition = schemaHandler.GetDataBaseDefinition();
 
-            var allowedTables = databaseDefinition.Tables.Where(c => !Settings.OmittedTables.Contains(c.Name));
+            var allowedTables = databaseDefinition.Tables.Where(c => !Settings.OmittedTables.Contains(c.Name)).Where(c => Settings.IncludedTables.Contains(c.Name));
 
             string T_UserDefinedTableType = Settings.T_UserDefinedTableType;
             string T_UserDefinedTableTypeFieldsDeclaration = Settings.T_UserDefinedTableTypeParameterDeclaration;

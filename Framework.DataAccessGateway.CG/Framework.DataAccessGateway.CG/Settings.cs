@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Framework.DataAccessGateway.CG
+﻿namespace Framework.DataAccessGateway.CG
 {
     public static class Settings
     {
@@ -39,7 +37,7 @@ namespace Framework.DataAccessGateway.CG
         #region Model settings
 
         public static string ModelNamespace = "Framework.DataAccessGateway";
-        public static string[] ModelImport = new string[] { "System", "System.Data", "System.Collections.Generic", "System.ComponentModel.DataAnnotations", "System.ComponentModel.DataAnnotations.Schema", "Framework.DataAccessGateway.Core" };
+        public static string[] ModelImport = { "System", "System.Data", "System.Collections.Generic", "System.ComponentModel.DataAnnotations", "System.ComponentModel.DataAnnotations.Schema", "Framework.DataAccessGateway.Core" };
         public static bool ModelCustomDataAnnotations = false;
 
         #endregion
@@ -47,20 +45,21 @@ namespace Framework.DataAccessGateway.CG
         #region Repository settings
 
         public static string RepositoryNamespace = "Framework.DataAccessGateway";
-        public static string[] RepositoryImport = new string[] { "System", "System.Data", "System.Linq", "System.Collections.Generic", "Framework.DataAccessGateway.Core", "Framework.AssetLibrary.Types" };
+        public static string[] RepositoryImport = { "System", "System.Data", "System.Linq", "System.Collections.Generic", "Framework.DataAccessGateway.Core", "Framework.AssetLibrary.Types" };
 
         #endregion
 
         #region Database settings
 
         public static string DatabaseNamespace = "Framework.DataAccessGateway";
-        public static string[] DatabaseImport = new string[] { "System", "System.Data", "System.Linq", "System.Collections.Generic", "Framework.DataAccessGateway.Core" };
+        public static string[] DatabaseImport = { "System", "System.Data", "System.Linq", "System.Collections.Generic", "Framework.DataAccessGateway.Core" };
 
         #endregion
 
         #region Global settings
 
-        public static string[] OmittedTables = new string[] { "sysdiagrams" };     
+        public static string[] OmittedTables = { "sysdiagrams" };  
+        public static string[] IncludedTables = {};
 
         #endregion
     }

@@ -1,8 +1,9 @@
-﻿using Framework.DataAccessGateway.CG.Models;
-using Framework.DataAccessGateway.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
+using Framework.DataAccessGateway.CG.Models;
+using Framework.DataAccessGateway.Core;
 
 namespace Framework.DataAccessGateway.CG
 {
@@ -22,7 +23,7 @@ namespace Framework.DataAccessGateway.CG
         {
             ConnectionString = connectionString;
             DBHandlerType = dbHandlerType;           
-        }       
+        }
 
         public string Sql(bool execute = false)
         {
@@ -42,12 +43,12 @@ namespace Framework.DataAccessGateway.CG
                 {
                     foreach (var statement in dropStatements)
                     {
-                        dbHandler.ExecuteNonQuery(statement, System.Data.CommandType.Text, transaction);
+                        dbHandler.ExecuteNonQuery(statement, CommandType.Text, transaction);
                     }
 
                     foreach (var statement in createStatements)
                     {
-                        dbHandler.ExecuteNonQuery(statement, System.Data.CommandType.Text, transaction);
+                        dbHandler.ExecuteNonQuery(statement, CommandType.Text, transaction);
                     }
 
                     transaction.Commit();
@@ -82,6 +83,13 @@ namespace Framework.DataAccessGateway.CG
             ContextBuilder contextBuilder = new ContextBuilder(ConnectionString, DBHandlerType);
 
             return contextBuilder.CSharpCode();
+        }
+
+        public Context Context(string contextName)
+        {
+            ContextBuilder contextBuilder = new ContextBuilder(ConnectionString, DBHandlerType);
+
+            return contextBuilder.CSharpCode(contextName);
         }
 
         #endregion

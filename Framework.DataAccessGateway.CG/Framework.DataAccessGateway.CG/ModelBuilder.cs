@@ -1,14 +1,14 @@
-﻿using Framework.DataAccessGateway.CG.Models;
-using Framework.DataAccessGateway.Core;
-using Framework.DataAccessGateway.Schema;
-using System;
+﻿using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Reflection;
+using Framework.DataAccessGateway.CG.Models;
+using Framework.DataAccessGateway.Core;
+using Framework.DataAccessGateway.Schema;
 
 namespace Framework.DataAccessGateway.CG
 {
@@ -44,7 +44,7 @@ namespace Framework.DataAccessGateway.CG
             DBSchemaHandler dbSchemaHandler = new DBSchemaHandler(ConnectionString, DBHandlerType);
             DBSchemaDataBaseDefinition databaseDefinition = dbSchemaHandler.GetDataBaseDefinition();
 
-            var allowedTables = databaseDefinition.Tables.Where(c => !Settings.OmittedTables.Contains(c.Name));
+            var allowedTables = databaseDefinition.Tables.Where(c => !Settings.OmittedTables.Contains(c.Name)).Where(c => Settings.IncludedTables.Contains(c.Name));
 
             List<Model> modelCode = new List<Model>();           
 
@@ -64,7 +64,7 @@ namespace Framework.DataAccessGateway.CG
 
                 CodeTypeDeclaration codeTypeDeclaration = new CodeTypeDeclaration(tableDefinition.Name.ToModelName());               
                 codeTypeDeclaration.IsClass = true;
-                codeTypeDeclaration.TypeAttributes = System.Reflection.TypeAttributes.Public;
+                codeTypeDeclaration.TypeAttributes = TypeAttributes.Public;
 
                 foreach (var column in tableDefinition.ColumnDefinitionList)
                 {
@@ -93,7 +93,7 @@ namespace Framework.DataAccessGateway.CG
                     if (Settings.ModelCustomDataAnnotations)
                     {
                         codeMemberProperty.CustomAttributes = new CodeAttributeDeclarationCollection(
-                        new CodeAttributeDeclaration[]
+                        new[]
                         {
                             new CodeAttributeDeclaration
                             {
@@ -134,7 +134,7 @@ namespace Framework.DataAccessGateway.CG
                 CodeTypeDeclaration codeTypeDeclaration_Key = new CodeTypeDeclaration(tableDefinition.Name.ToModelKeyName());              
                
                 codeTypeDeclaration_Key.IsClass = true;
-                codeTypeDeclaration_Key.TypeAttributes = System.Reflection.TypeAttributes.Public;
+                codeTypeDeclaration_Key.TypeAttributes = TypeAttributes.Public;
 
                 foreach (var column in tableDefinition.ColumnDefinitionList.Where(c => c.DBSchemaConstraintDefinitionList.Any(d => d.Constraint == ConstraintType.PrimaryKey)))
                 {                  
@@ -147,7 +147,7 @@ namespace Framework.DataAccessGateway.CG
                     if (Settings.ModelCustomDataAnnotations)
                     {
                         codeMemberProperty_Key.CustomAttributes = new CodeAttributeDeclarationCollection(
-                        new CodeAttributeDeclaration[]
+                        new[]
                         {
                             new CodeAttributeDeclaration
                             {
@@ -187,7 +187,7 @@ namespace Framework.DataAccessGateway.CG
 
                 CodeTypeDeclaration codeTypeDeclaration_Insert = new CodeTypeDeclaration(tableDefinition.Name.ToModelInsertName());
                 codeTypeDeclaration_Insert.IsClass = true;
-                codeTypeDeclaration_Insert.TypeAttributes = System.Reflection.TypeAttributes.Public;
+                codeTypeDeclaration_Insert.TypeAttributes = TypeAttributes.Public;
 
                 foreach (var column in tableDefinition.ColumnDefinitionList.Where(c => !c.IsIdentity && c.DataType.IsAllowedForInsertOrUpdate()))
                 {
@@ -216,7 +216,7 @@ namespace Framework.DataAccessGateway.CG
                     if (Settings.ModelCustomDataAnnotations)
                     {
                         codeMemberProperty.CustomAttributes = new CodeAttributeDeclarationCollection(
-                        new CodeAttributeDeclaration[]
+                        new[]
                         {
                             new CodeAttributeDeclaration
                             {
@@ -258,7 +258,7 @@ namespace Framework.DataAccessGateway.CG
                 CodeTypeDeclaration codeTypeDeclaration_Update = new CodeTypeDeclaration(tableDefinition.Name.ToModelUpdateName());    
                               
                 codeTypeDeclaration_Update.IsClass = true;
-                codeTypeDeclaration_Update.TypeAttributes = System.Reflection.TypeAttributes.Public;             
+                codeTypeDeclaration_Update.TypeAttributes = TypeAttributes.Public;             
 
                 //Add underscore properties 
                 foreach (var column in tableDefinition.ColumnDefinitionList.Where(c => c.DBSchemaConstraintDefinitionList.Any(d => d.Constraint == ConstraintType.PrimaryKey)))
@@ -272,7 +272,7 @@ namespace Framework.DataAccessGateway.CG
                     if (Settings.ModelCustomDataAnnotations)
                     {
                         codeMemberProperty_Update.CustomAttributes = new CodeAttributeDeclarationCollection(
-                        new CodeAttributeDeclaration[]
+                        new[]
                         {
                             new CodeAttributeDeclaration
                             {
@@ -327,7 +327,7 @@ namespace Framework.DataAccessGateway.CG
                     if (Settings.ModelCustomDataAnnotations)
                     {
                        codeMemberProperty.CustomAttributes = new CodeAttributeDeclarationCollection(
-                       new CodeAttributeDeclaration[]
+                       new[]
                        {
                             new CodeAttributeDeclaration
                             {

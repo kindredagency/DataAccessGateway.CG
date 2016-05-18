@@ -31,7 +31,7 @@
 			
 	var appSettings = configuration.GetSection("cg.appSettings") as AppSettingsSection;
 
-	List<string> omittedTables = new List<string>();
+	List<string> omittedTables = new List<string>();	
 
 	foreach(var omittedTable in appSettings.Settings["OmittedTables"].Value.Split(','))
 	{
@@ -39,6 +39,15 @@
 	}
 
 	Settings.OmittedTables = omittedTables.ToArray();
+
+	List<string> includedTables = new List<string>();
+
+	foreach(var includedTable in appSettings.Settings["IncludedTables"].Value.Split(','))
+	{
+		includedTables.Add(includedTable);
+	}
+
+	Settings.IncludedTables = includedTables.ToArray();
 
 	var connectionString = appSettings.Settings["DBConnection"].Value;
 
@@ -50,7 +59,7 @@
 
 		Settings.DatabaseNamespace = dte.Solution.FindProjectItem(Host.TemplateFile).ContainingProject.Name + "." + builder.InitialCatalog;
 
-		var context = code.Context();
+		var context = code.Context("DBContext");
 						
 		manager.StartNewFile("_" + context.Name + ".cs");
 

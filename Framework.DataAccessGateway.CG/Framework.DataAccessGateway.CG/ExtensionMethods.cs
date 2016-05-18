@@ -1,7 +1,4 @@
-﻿using Framework.DataAccessGateway.CG.Models;
-using Framework.DataAccessGateway.Core;
-using Framework.DataAccessGateway.Schema;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
@@ -9,6 +6,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using Framework.DataAccessGateway.CG.Models;
+using Framework.DataAccessGateway.Core;
+using Framework.DataAccessGateway.Schema;
 
 namespace Framework.DataAccessGateway.CG
 {
@@ -158,7 +158,7 @@ namespace Framework.DataAccessGateway.CG
 
         public static bool IsNonNullable(this Type value)
         {
-            Type[] nonNullableTypes = new Type[] {  typeof(byte[]), typeof(string) };
+            Type[] nonNullableTypes = {  typeof(byte[]), typeof(string) };
 
             if (nonNullableTypes.Contains(value))
                 return true;

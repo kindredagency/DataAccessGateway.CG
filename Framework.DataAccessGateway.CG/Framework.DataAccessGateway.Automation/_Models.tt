@@ -40,6 +40,15 @@
 
 	Settings.OmittedTables = omittedTables.ToArray();
 
+	List<string> includedTables = new List<string>();
+
+	foreach(var includedTable in appSettings.Settings["IncludedTables"].Value.Split(','))
+	{
+		includedTables.Add(includedTable);
+	}
+
+	Settings.IncludedTables = includedTables.ToArray();
+
 	var connectionString = appSettings.Settings["DBConnection"].Value;
 
 	SqlConnectionStringBuilder builder =  new SqlConnectionStringBuilder(connectionString);

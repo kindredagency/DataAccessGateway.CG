@@ -1,14 +1,12 @@
-﻿using Framework.DataAccessGateway.CG.Models;
-using Framework.DataAccessGateway.Core;
-using Framework.DataAccessGateway.Schema;
-using System;
+﻿using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
+using Framework.DataAccessGateway.CG.Models;
+using Framework.DataAccessGateway.Core;
+using Framework.DataAccessGateway.Schema;
 
 namespace Framework.DataAccessGateway.CG
 {
@@ -39,12 +37,12 @@ namespace Framework.DataAccessGateway.CG
             CodeDomProviderOptions.IndentString = "\t";
         }
 
-        public Context CSharpCode()
+        public Context CSharpCode(string contextName = null)
         {
             var schemaHandler = new DBSchemaHandler(ConnectionString, DBHandlerType);
             var databaseDefinition = schemaHandler.GetDataBaseDefinition();
 
-            var allowedTables = databaseDefinition.Tables.Where(c => !Settings.OmittedTables.Contains(c.Name));
+            var allowedTables = databaseDefinition.Tables.Where(c => !Settings.OmittedTables.Contains(c.Name)).Where(c => Settings.IncludedTables.Contains(c.Name));
 
             CodeCompileUnit codeCompileUnit = new CodeCompileUnit();
             CodeNamespace codeNamespace = new CodeNamespace(Settings.DatabaseNamespace);
@@ -56,7 +54,7 @@ namespace Framework.DataAccessGateway.CG
 
 
             //Build the interface.
-            CodeTypeDeclaration codeInterfaceDeclaration = new CodeTypeDeclaration("I" + databaseDefinition.DatabaseName);
+            CodeTypeDeclaration codeInterfaceDeclaration = new CodeTypeDeclaration("I" + (contextName ?? databaseDefinition.DatabaseName));
             codeInterfaceDeclaration.IsInterface = true;
             codeInterfaceDeclaration.IsPartial = true;
 
@@ -74,10 +72,10 @@ namespace Framework.DataAccessGateway.CG
             codeNamespace.Types.Add(codeInterfaceDeclaration);
 
             //Build the class
-            CodeTypeDeclaration codeTypeDeclaration = new CodeTypeDeclaration(databaseDefinition.DatabaseName);            
+            CodeTypeDeclaration codeTypeDeclaration = new CodeTypeDeclaration((contextName ?? databaseDefinition.DatabaseName));            
             codeTypeDeclaration.IsClass = true;
             codeTypeDeclaration.IsPartial = true;
-            codeTypeDeclaration.TypeAttributes = System.Reflection.TypeAttributes.Public;
+            codeTypeDeclaration.TypeAttributes = TypeAttributes.Public;
             codeTypeDeclaration.BaseTypes.Add(codeInterfaceDeclaration.Name);
 
             CodeMemberField dbHandler = new CodeMemberField();

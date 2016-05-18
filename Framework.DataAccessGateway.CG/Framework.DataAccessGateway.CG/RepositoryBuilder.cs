@@ -1,13 +1,11 @@
-﻿using Framework.DataAccessGateway.CG.Models;
-using Framework.DataAccessGateway.Core;
-using System;
-using System.CodeDom;
+﻿using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
+using Framework.DataAccessGateway.CG.Models;
+using Framework.DataAccessGateway.Core;
 
 namespace Framework.DataAccessGateway.CG
 {
@@ -76,7 +74,7 @@ namespace Framework.DataAccessGateway.CG
                 CodeTypeDeclaration codeTypeDeclaration = new CodeTypeDeclaration(tableName.ToRepositoryName());
                 codeTypeDeclaration.IsClass = true;
                 codeTypeDeclaration.IsPartial = true;
-                codeTypeDeclaration.TypeAttributes = System.Reflection.TypeAttributes.NestedAssembly;
+                codeTypeDeclaration.TypeAttributes = TypeAttributes.NestedAssembly;
                 codeTypeDeclaration.BaseTypes.Add(codeInterfaceDeclaration.Name);
 
                 //DBHandler property
