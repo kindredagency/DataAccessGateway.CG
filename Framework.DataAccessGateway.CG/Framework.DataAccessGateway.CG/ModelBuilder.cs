@@ -160,7 +160,7 @@ namespace Framework.DataAccessGateway.CG
                                     },
                                     new CodeAttributeArgument
                                     {
-                                        Value = new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(typeof(ParameterDirection)), column.IsIdentity ? ParameterDirection.ReturnValue.ToString() : ParameterDirection.Input.ToString())
+                                        Value = new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(typeof(ParameterDirection)), ParameterDirection.Input.ToString())
                                     },
                                     new CodeAttributeArgument
                                     {
@@ -285,7 +285,7 @@ namespace Framework.DataAccessGateway.CG
                                     },
                                     new CodeAttributeArgument
                                     {
-                                        Value = new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(typeof(ParameterDirection)), column.IsIdentity ? ParameterDirection.ReturnValue.ToString() : ParameterDirection.Input.ToString())
+                                        Value = new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(typeof(ParameterDirection)), ParameterDirection.Input.ToString())
                                     },
                                     new CodeAttributeArgument
                                     {
@@ -340,7 +340,7 @@ namespace Framework.DataAccessGateway.CG
                                     },
                                     new CodeAttributeArgument
                                     {
-                                        Value = new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(typeof(ParameterDirection)), column.IsIdentity ? ParameterDirection.ReturnValue.ToString() : ParameterDirection.Input.ToString())
+                                        Value = new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(typeof(ParameterDirection)), ParameterDirection.Input.ToString())
                                     },
                                     new CodeAttributeArgument
                                     {
